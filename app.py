@@ -10,14 +10,15 @@ def front_page():
 
 
 @app.route('/play_audio', methods=['POST'])
-def play_audio(file):
+def play_audio():
     # get the file name from the form
     file_name = request.form['fileName']
     # define and call the Bash command to get audio files from cloud
     bash_command = "wget -c https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/audio.zip"
     os.system(bash_command)
     # play the audio data
-    os.system("afplay " + file + ".wav")
+    os.system("afplay " + file_name + ".wav")
+    
     return render_template('index.html')
 
 

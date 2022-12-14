@@ -11,8 +11,9 @@ def cover_page():
 @app.route('/get_sample', methods=['POST'])
 def get_sample():
     # define and call the Bash command to get audio files from cloud
-    bash_command = "wget -c https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/audio.zip"
+    bash_command = "wget -c https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/customer_order.zip"
     os.system(bash_command)
+    read_zip_file("customer_order")
     return render_template('getSample.html')
 
 
@@ -22,7 +23,7 @@ def get_order():
     file_name = request.form['fileName']
     # process speech file & get text data
     text = []
-    for file in read_zip_file("audio"):
+    for file in read_zip_file("customer_order"):
         if file_name in file:
             text.append(get_text_from_speech(file))
 

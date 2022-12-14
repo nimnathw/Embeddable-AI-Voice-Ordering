@@ -9,8 +9,15 @@ def front_page():
     return render_template('index.html')
 
 
-@app.route('/getOrder', methods=['POST'])
-def getorder():
+@app.route('/play_audio', methods=['POST'])
+def play_audio(file):
+    # play the audio data
+    os.system("afplay " + file + ".wav")
+    return render_template('index.html')
+
+
+@app.route('/get_order', methods=['POST'])
+def get_order():
     # get the file name from the form
     file_name = request.form['fileName']
 

@@ -4,9 +4,13 @@
     </head>
     <body>
         <h1>Pizza Ordering App</h1>
-
-        <p>Please select smaple audio below:</p>
-        <form action="/getOrder" method="post">
+        <p>Play sample audio below:</p>
+        <form action="/play_audio" method="post">
+            <input type="text" name="fileName" value="">
+            <input type="submit" value="Sample" />
+        </form>
+        <p>Please select sample audio below:</p>
+        <form action="/get_order" method="post">
             <input type="text" name="fileName" value="">
             <input type="submit" value="Submit" />
         </form>

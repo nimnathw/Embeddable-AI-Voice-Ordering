@@ -4,23 +4,34 @@
     </head>
     <body>
         <h1>Pizza Ordering App</h1>
-        <p>Try the sample audio:</p>
-        <button onclick="playAudio()" type="button">Sample 1</button>
+        <p>Play the sample audio:</p>
+        <button onclick="playAudio('artem_1')" type="button">Sample 1</button>
+        <button onclick="playAudio('artem_2')" type="button">Sample 2</button>
+        <button onclick="playAudio('artem_3')" type="button">Sample 3</button>
         <p>Please select sample audio below:</p>
         <form action="/get_order" method="post">
-            <input type="text" name="fileName" value="">
-            <input type="submit" value="Submit" />
+            <input type="hidden" name="fileName" value="artem_1">
+            <input type="submit" value="Sample 1">
+            <input type="hidden" name="fileName" value="artem_2">
+            <input type="submit" value="Sample 2">
+            <input type="hidden" name="fileName" value="artem_3">
+            <input type="submit" value="Sample 3">
         </form>
 
-        <audio id="sampleAudio">
-            <source src="customer_order/artem_1.wav" type="audio/wav">
+        <audio id="artem_1">
+            <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/artem_1.wav" type="audio/wav"/>
+        </audio>
+        <audio id="artem_2">
+            <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/artem_2.wav" type="audio/wav"/>
+        </audio>
+        <audio id="artem_3">
+            <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/artem_3.wav" type="audio/wav"/>
         </audio>
 
         <script>
-            var audio = document.getElementById("sampleAudio");
-            function playAudio()
+            function playAudio(id)
             {
-                audio.play();
+                document.getElementById(id).play();
             }
         </script>
     </body>

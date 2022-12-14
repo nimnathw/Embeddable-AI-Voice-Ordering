@@ -4,11 +4,16 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def main_page():
+def cover_page():
+    return render_template('cover.html')
+
+
+@app.route('/get_sample', methods=['POST'])
+def get_sample():
     # define and call the Bash command to get audio files from cloud
     bash_command = "wget -c https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/audio.zip"
     os.system(bash_command)
-    return render_template('index.html')
+    return render_template('getSample.html')
 
 
 @app.route('/get_order', methods=['POST'])

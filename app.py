@@ -17,8 +17,10 @@ def play_audio():
     bash_command = "wget -c https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/audio.zip"
     os.system(bash_command)
     # play the audio data
-    os.system("afplay " + file_name + ".wav")
-    
+    for file in read_zip_file("audio"):
+        if file_name in file:
+            os.system("afplay " + file_name + ".wav")
+
     return render_template('index.html')
 
 
@@ -26,7 +28,6 @@ def play_audio():
 def get_order():
     # get the file name from the form
     file_name = request.form['fileName']
-
     # process speech file & get text data
     text = []
     for file in read_zip_file("audio"):

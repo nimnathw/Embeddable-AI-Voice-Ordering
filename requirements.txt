@@ -9,6 +9,3 @@ pandas
 pyjnius
 tensorflow
 yake
-transformers
-deepspeech
-gradio

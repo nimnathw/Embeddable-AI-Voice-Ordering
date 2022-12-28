@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def cover_page():
+    text_to_speech("Welcome to Skills Network Pizza. Where do you want your order delivery to?", "intro.wav")
     return render_template('cover.html')
 
 
@@ -25,7 +26,8 @@ def get_order():
     text = []
     for file in read_zip_file("customer_order"):
         if file_name in file:
-            text.append(get_text_from_speech(file))
+            text.append(speech_to_text(file))
+    
 
     # TODO:
     # Scape the url

@@ -6,9 +6,16 @@
         <h1>Pizza Ordering App</h1>
         <form action="/get_sample" method="post">
             <label>
-                <input type="hidden" name="fileName" value="">
+                <input onclick="playAudio('intro.wav')" name="fileName" value="">
                 <input type="submit" value="Start">
             </label>
         </form>
+    
+        <script>
+            function playAudio(id)
+            {
+                document.getElementById(id).play();
+            }
+        </script>
     </body>
 </html>

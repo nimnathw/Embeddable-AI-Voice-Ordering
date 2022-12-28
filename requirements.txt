@@ -8,3 +8,4 @@ scipy
 pandas
 pyjnius
 tensorflow
+yake

@@ -9,3 +9,7 @@ pandas
 pyjnius
 tensorflow
 yake
+transformers
+torch
+deepspeech
+gradio

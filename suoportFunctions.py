@@ -1,11 +1,12 @@
 import os
+import uuid
 import glob
 import json
 import requests
 import yake
 import pandas as pd
 from zipfile import ZipFile
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash, redirect
 
 
 # decompress the zip files
@@ -27,7 +28,7 @@ def speech_to_text(file):
     # setting up params models
     params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.7"}
     headers = {"Content-Type": "audio/wav"}
-    result = requests.post(speech_to_text_url, headers=headers, params=params, data=open(file, 'rb'))
+    result = requests.post(speech_to_text_url, headers=headers, params=params, data=file) # data=open(file, 'rb')
 
     # get transcript from json result
     output = ""
@@ -66,4 +67,3 @@ def get_keywords(texts):
     keywords = extractor.extract_keywords(texts)
 
     return keywords
-

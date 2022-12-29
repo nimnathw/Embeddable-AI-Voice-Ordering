@@ -1,10 +1,13 @@
 <html lang="en">
     <head>
-        <title>Pizza Ordering App</title>
+        <title>Skills Network Pizza App</title>
     </head>
     <body>
-        <h1>Pizza Ordering App</h1>
-        <p>Play the sample audio:</p>
+        <h1>Skills Network Pizza App</h1>
+        <audio controls autoplay>
+            <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/topping.wav" type="audio/wav">
+        </audio>
+        <p>Some sample audio:</p>
         <button onclick="playAudio('artem_1')" type="button">Sample 1</button>
         <button onclick="playAudio('artem_2')" type="button">Sample 2</button>
         <button onclick="playAudio('artem_3')" type="button">Sample 3</button>
@@ -31,12 +34,11 @@
         <audio id="artem_3">
             <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/artem_3.wav" type="audio/wav"/>
         </audio>
-
-        <script>
-            function playAudio(id)
-            {
-                document.getElementById(id).play();
-            }
-        </script>
     </body>
+    <script>
+        function playAudio(id)
+        {
+            document.getElementById(id).play();
+        }
+    </script>
 </html>

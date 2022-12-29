@@ -4,18 +4,26 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def cover_page():
-    text_to_speech("Welcome to Skills Network Pizza. Where do you want your order delivery to?", "intro.wav")
-    return render_template('cover.html')
+def root():
+    return render_template("main.html")
+
+@app.route('/get_info', methods=['POST'])
+def get_info():
+    global name, address
+    name = request.form['name']
+    address = request.form['address']
+
+    return render_template("getInfo.html")
 
 
-@app.route('/get_sample', methods=['POST'])
-def get_sample():
-    # define and call the Bash command to get audio files from cloud
+@app.route('/get_topping', methods=['POST'])
+def get_topping():
+    # call the Bash command to get sample audio files
     bash_command = "wget -c https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/customer_order.zip"
     os.system(bash_command)
     read_zip_file("customer_order")
-    return render_template('getSample.html')
+
+    return render_template('getTopping.html')
 
 
 @app.route('/get_order', methods=['POST'])
@@ -44,6 +52,24 @@ def get_order():
 
     # Return template with data
     return render_template('getOrder.html', fileName=file_name, reviews=reviews, results=text)
+
+
+@app.route('/save-record', methods=['POST'])
+def save_record():
+    # check if the post request has the file part
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file = request.files['file']
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+    file_name = str(uuid.uuid4()) + ".mp3"
+    full_file_name = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
+    file.save(full_file_name)
+    return '<h1>Success</h1>'
 
 
 if __name__ == '__main__':

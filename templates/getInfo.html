@@ -1,37 +1,23 @@
 <html lang="en">
     <head>
-        <title>Pizza Ordering App</title>
+        <title>Skills Network Pizza App</title>
     </head>
     <body>
-        <h1>Pizza Ordering App</h1>
-        <p>Enter your delivery information:</p>
-        <form action="/get_topping" method="post">
-            <label for="name">Name:</label>
-                <input type="text" id="name" name="name"><br><br>
-            <label for="street">Street address:</label>
-                <input type="text" id="street" name="street"><br><br>
-            <label for="city">City:</label>
-                <input type="text" id="city" name="city"><br><br>
-            <label for="code">Postal code:</label>
-                <input type="text" id="code" name="code"><br><br>
-                <input type="submit" value="Start">
-          </form>
-
+        <h1>Skills Network Pizza App</h1>
         <audio controls autoplay>
             <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/intro.wav" type="audio/wav">
         </audio>
-        
-        <head>
-            <meta charset="UTF-8">
-            <title>Web Speech Recorder</title>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        </head>
-        <body>
-            <p>
-                <button id="startRecording">Start recording</button>
-                <button id="stopRecording" disabled>Stop recording</button>
-            </p>
-        </body>
+        <p>Record your delivery information:</p>
+        <p>
+            <button id="startRecording">Start recording</button>
+            <button id="stopRecording" disabled>Stop recording</button>
+        </p>
+        <form action="/get_topping" method="post">
+            <label>
+                <br>
+                <input type="submit" value="Next">
+            </label>
+        </form>
         <script>
             navigator
                 .mediaDevices
@@ -43,16 +29,16 @@
                 rec.ondataavailable = e => {
                     audioChunks.push(e.data);
                     if (rec.state == "inactive") {
-                        let blob = new Blob(audioChunks, {type: 'audio/mpeg-3'});
+                        let blob = new Blob(audioChunks, {type: 'audio/wav'});
                         sendData(blob);
                     }
                 }
             }
-        
+
             function sendData(data) {
                 var form = new FormData();
-                form.append('file', data, 'data.mp3');
-                form.append('title', 'data.mp3');
+                form.append('file', data, 'data.wav');
+                form.append('title', 'data.wav');
                 //Chrome inspector shows that the post data includes a file and a title.
                 $.ajax({
                     type: 'POST',

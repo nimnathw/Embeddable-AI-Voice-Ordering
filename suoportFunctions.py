@@ -48,7 +48,7 @@ def text_to_speech(texts, name):
     # etting up params
     params = {'output':'output_text.wav'}
     # creating a data in JSON format to send as a parameter to the service
-    words = {"text":texts}
+    words = json.dumps({"text":texts})
     
     # method to get the Voice data from the text service
     request =requests.post(text_to_speech_url, headers=headers, params=params, data=words)

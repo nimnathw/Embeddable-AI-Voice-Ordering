@@ -7,6 +7,11 @@ import yake
 import pandas as pd
 from zipfile import ZipFile
 from flask import Flask, render_template, request, flash, redirect
+import nltk
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+from difflib import SequenceMatcher
+
 
 
 # decompress the zip files
@@ -26,7 +31,7 @@ def speech_to_text(file):
     # speech url, here port defines on basis of kubernetes port forward
     speech_to_text_url = "http://localhost:1081/speech-to-text/api/v1/recognize?"
     # setting up params models
-    params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.7"}
+    params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.6"}
     headers = {"Content-Type": "audio/wav"}
     result = requests.post(speech_to_text_url, headers=headers, params=params, data=file) # data=open(file, 'rb')
 
@@ -61,9 +66,34 @@ def text_to_speech(texts, name):
         f.write(request.content)
 
 
+def get_keywords(text):
+    pizza_size = ["large", "medium", "small"]
+    pizza_topping = ["pepperoni", "mushroom", "onion", "black olive", "green pepper", "cheese"]
+    order_size, order_topping = [], []
+    check_size = True
 
-def get_keywords(texts):
-    extractor = yake.KeywordExtractor(lan="en", n=3, dedupLim=0.9, top=10, features=None)
-    keywords = extractor.extract_keywords(texts)
+    for word in text.split():
+        if check_size:
+            for size in pizza_size:
+                if SequenceMatcher(None, word, size).ratio() > 0.6:
+                    order_size.append(size)
+                    check_size = False
+        for topping in pizza_topping:
+            if SequenceMatcher(None, word, topping).ratio() > 0.6:
+                order_topping.append(topping)
+                pizza_topping.remove(topping)
 
-    return keywords
+    # extractor = yake.KeywordExtractor(lan="en", n=3, dedupLim=0.9, top=10, features=None)
+    # keywords = extractor.extract_keywords(text)
+
+    return order_size, order_topping
+
+
+def clean_text(text):
+    stop_words = stopwords.words('english')
+    stop_words.extend(["gimme", "lemme", "cause", "'cuz", "imma", "gonna", "wanna", "please",
+    "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy","day",
+    "hey", "yoo", "delivery", "piece", "want", "order"])
+    clean_text = " ".join([word.replace('X','').replace('/','') for word in text.split() if word.lower() not in stop_words])
+
+    return clean_text

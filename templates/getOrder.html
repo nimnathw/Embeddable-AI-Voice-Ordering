@@ -1,19 +1,20 @@
 <html lang="en">
     <head>
-        <title>The Results</title>
+        <title>Skills Network Pizza App</title>
     </head>
     <body>
-        <h1>The Results for {{fileName}}</h1>
-
-        <p>Some reviews</p>
+        <h1>Thank you for using the Skills Network Pizza App!</h1>
+        <audio controls autoplay>
+            <source src="/customer.wav" type="audio/wav">
+        </audio>
+        <h3>Here are the details of the order:</h3>
+        <p>Delivery address: {{customerAddress}}</p>
+        <p>Pizza size: {{orderSize}}</p>
+        <p>Pizza topping:</p>
         <ul>
-            {% for review in reviews %}
-                <li>{{review}}</li>
+            {% for topping in orderTopping %}
+                <li>{{topping}}</li>
             {% endfor %}
         </ul>
-        
-        <p>Here are the results:</p>
-        <p>{{results}}</p>
-
     </body>
 </html>

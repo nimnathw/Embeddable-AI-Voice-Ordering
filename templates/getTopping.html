@@ -7,23 +7,34 @@
         <audio controls autoplay>
             <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/topping.wav" type="audio/wav">
         </audio>
+        <p>Upload your order:</p>
+        <form action="/get_record" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="hidden" name="status" value="topping">
+            <input type="submit" value="Upload">
+        </form>
+        <div id="msg" style="display: none;">
+            <p>Audio uploaded successfully!</p>
+        </div>
+        <form action="/get_order" method="post">
+            <label>
+                <br>
+                <input type="submit" value="Next">
+            </label>
+        </form>
+        <br><br>
         <p>Some sample audio:</p>
-        <button onclick="playAudio('artem_1')" type="button">Sample 1</button>
-        <button onclick="playAudio('artem_2')" type="button">Sample 2</button>
-        <button onclick="playAudio('artem_3')" type="button">Sample 3</button>
-        <p>Please select sample audio below:</p>
-        <form action="/get_order" method="post">
-            <input type="hidden" name="fileName" value="artem_1">
-            <input type="submit" value="Sample 1">
-        </form>
-        <form action="/get_order" method="post">
-            <input type="hidden" name="fileName" value="artem_2">
-            <input type="submit" value="Sample 2">
-        </form>
-        <form action="/get_order" method="post">
-            <input type="hidden" name="fileName" value="artem_3">
-            <input type="submit" value="Sample 3">
-        </form>
+        <div>
+            <button onclick="playAudio('artem_1')" type="button">Play Sample 1</button>
+            <button onclick="playAudio('artem_2')" type="button">Play Sample 2</button>
+            <button onclick="playAudio('artem_3')" type="button">Play Sample 3</button>
+            <form action="/get_order" method="post">
+                <br>
+                <input type="submit" value="Test Sample 1">
+                <input type="submit" value="Test Sample 2">
+                <input type="submit" value="Test Sample 3">
+            </form>
+        </div>
 
         <audio id="artem_1">
             <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/artem_1.wav" type="audio/wav"/>
@@ -36,6 +47,15 @@
         </audio>
     </body>
     <script>
+        const form = document.querySelector("form");
+        const msg = document.querySelector('#msg');
+        form.addEventListener('submit', (e) =>
+        {
+            e.preventDefault();
+            document.getElementById('msg').style.display = 'block';
+            setTimeout(() => form.submit(), 3000);
+        });
+
         function playAudio(id)
         {
             document.getElementById(id).play();

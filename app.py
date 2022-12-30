@@ -2,6 +2,7 @@ from suoportFunctions import *
 
 
 app = Flask(__name__)
+address, order, audioName = None, None, "customer.wav"
 
 
 @app.route('/')
@@ -59,9 +60,22 @@ def get_record():
             return render_template("getTopping.html")
 
 
-@app.route('/customer.wav')
-def audio_wav():
-    return send_file("customer.wav", attachment_filename="customer.wav")
+@app.route('/audio_name', methods=['POST'])
+def audio_name():
+    global audioName
+    audioName = request.form["audioName"]
+    return render_template('getOrder.html')
+
+
+@app.route('/stream_wav')
+def stream_wav():
+    def generate(name):
+        with open(str("./" + name), "rb") as fwav:
+            data = fwav.read(1024)
+            while data:
+                yield data
+                data = fwav.read(1024)
+    return Response(generate(audioName), mimetype="audio/x-wav")
 
 
 if __name__ == '__main__':

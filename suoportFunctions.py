@@ -6,7 +6,7 @@ import requests
 import yake
 import pandas as pd
 from zipfile import ZipFile
-from flask import Flask, render_template, request, flash, redirect
+from flask import Flask, render_template, request, flash, redirect, send_file
 import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -47,6 +47,10 @@ def speech_to_text(file):
 
 
 def text_to_speech(texts, name):
+    # remove the existing files in the folder
+    bash_command = str("find . -path \*/" + name + " -delete")
+    os.system(bash_command)
+
     # speech url, here port defines on blsasis of kubernetes port forword
     text_to_speech_url = 'http://localhost:1080/text-to-speech/api/v1/synthesize'
     # setting up the headers for post request to service
@@ -55,7 +59,6 @@ def text_to_speech(texts, name):
     params = {'output':'output_text.wav'}
     # creating a data in JSON format to send as a parameter to the service
     words = json.dumps({"text":texts})
-    
     # method to get the Voice data from the text service
     request =requests.post(text_to_speech_url, headers=headers, params=params, data=words)
     print(request.status_code)

@@ -33,6 +33,14 @@ def get_order():
 
     clean_order = clean_text(order)
     order_size, order_topping = get_keywords(clean_order)
+    
+    if not customer_address:
+        print("missing address")
+    elif not order_size:
+        print("missing order size")
+        order_size = ["Not defined"]
+    elif not order_topping:
+        print("missing order topping")
 
     result = str("Thank you for using the Skills Network Pizza App to place your order. I detected you want a " + order_size[0] + " pizza with the following topping: " + " ".join(map(str, order_topping)) + ". " + "The delivery address is " + customer_address+ ".")
 

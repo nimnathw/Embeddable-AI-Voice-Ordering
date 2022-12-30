@@ -1,11 +1,11 @@
 from suoportFunctions import *
 
+
 app = Flask(__name__)
 
 
 @app.route('/')
 def root():
-    global address, order
     return render_template("main.html")
 
 
@@ -33,13 +33,16 @@ def get_order():
     clean_order = clean_text(order)
     order_size, order_topping = get_keywords(clean_order)
 
-    repeat = str("Thank you using Skills Network Pizza App to place your order. I detect you want a " + order_size[0] + " with the following topping: " + " ".join(map(str, order_topping)) + ". " + "The delivery address is: " + customer_address)
+    result = str("Thank you for using the Skills Network Pizza App to place your order. I detected you want a " + order_size[0] + " pizza with the following topping: " + " ".join(map(str, order_topping)) + ". " + "The delivery address is " + customer_address+ ".")
 
-    return render_template('getOrder.html', customerAddress=customer_address, orderSize=order_size, orderTopping=order_topping)
+    text_to_speech(result, "customer.wav")
+
+    return render_template('getOrder.html', customerAddress=customer_address, orderSize=order_size[0], orderTopping=order_topping)
 
 
 @app.route('/get_record', methods=["GET", "POST"])
 def get_record():
+    global address, order
     if request.method == "POST":
         status = request.form['status']
         file = request.files["file"]
@@ -54,6 +57,11 @@ def get_record():
             order = speech_to_text(file)
             print(order)
             return render_template("getTopping.html")
+
+
+@app.route('/customer.wav')
+def audio_wav():
+    return send_file("customer.wav", attachment_filename="customer.wav")
 
 
 if __name__ == '__main__':

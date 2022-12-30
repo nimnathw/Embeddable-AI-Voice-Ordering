@@ -1,18 +1,16 @@
 from suoportFunctions import *
 
-
 app = Flask(__name__)
 
 
 @app.route('/')
 def root():
-    global name, address, topping
+    global address, order
     return render_template("main.html")
 
 
 @app.route('/get_info', methods=['POST'])
 def get_info():
-
     return render_template("getInfo.html")
 
 
@@ -29,43 +27,33 @@ def get_topping():
 
 @app.route('/get_order', methods=['POST'])
 def get_order():
-    # get the file name from the form
-    file_name = request.form['fileName']
-    # process speech file & get text data
-    text = []
-    for file in read_zip_file("customer_order"):
-        if file_name in file:
-            text.append(speech_to_text(file))
-    
+    # clean the stop words from audio files
+    customer_address = clean_text(address)
 
-    # TODO:
-    # Scape the url
-    # reviews = scrape(url)
+    clean_order = clean_text(order)
+    order_size, order_topping = get_keywords(clean_order)
 
-    # TODO:
-    # Get the sentiment
-    # sentiment = get_sentiment(reviews)
+    repeat = str("Thank you using Skills Network Pizza App to place your order. I detect you want a " + order_size[0] + " with the following topping: " + " ".join(map(str, order_topping)) + ". " + "The delivery address is: " + customer_address)
 
-    # results = sentiment
-
-    # Hard code pretend results for now to demonstrate the app
-    reviews = ["This is terrible", "This is great", "This is ok"]
-
-    # Return template with data
-    return render_template('getOrder.html', fileName=file_name, reviews=reviews, results=text)
+    return render_template('getOrder.html', customerAddress=customer_address, orderSize=order_size, orderTopping=order_topping)
 
 
-@app.route('/get_info_record', methods=["GET", "POST"])
-def get_info_record():
+@app.route('/get_record', methods=["GET", "POST"])
+def get_record():
     if request.method == "POST":
+        status = request.form['status']
         file = request.files["file"]
         if file.filename == "":
             return redirect(request.url)
         
-        address = speech_to_text(file)
-        print(address)
-    
-    return render_template("getInfo.html")
+        if status == "info":
+            address = speech_to_text(file)
+            print(address)
+            return render_template("getInfo.html")
+        elif status == "topping":
+            order = speech_to_text(file)
+            print(order)
+            return render_template("getTopping.html")
 
 
 if __name__ == '__main__':

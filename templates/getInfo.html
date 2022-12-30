@@ -8,9 +8,10 @@
             <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/intro.wav" type="audio/wav">
         </audio>
         <p>Upload your delivery information:</p>
-        <form action="/get_info_record" method="post" enctype="multipart/form-data">
+        <form action="/get_record" method="post" enctype="multipart/form-data">
             <input type="file" name="file">
-            <input type="submit" value="Upload">
+            <input type="hidden" name="status" value="info">
+            <input type="submit" id="upload" value="Upload">
         </form>
         <div id="msg" style="display: none;">
             <p>Audio uploaded successfully!</p>
@@ -23,12 +24,13 @@
         </form>
     </body>
     <script>
-        var upload = document.querySelector('submit');
-        upload.addEventListener('submit', function (e)
+        const form = document.querySelector("form");
+        const msg = document.querySelector('#msg');
+        form.addEventListener('submit', (e) =>
         {
-          e.preventDefault();
-          // Show message element
-          document.getElementById('msg').style.display = 'block';
+            e.preventDefault();
+            document.getElementById('msg').style.display = 'block';
+            setTimeout(() => form.submit(), 3000);
         });
     </script>
 </html>

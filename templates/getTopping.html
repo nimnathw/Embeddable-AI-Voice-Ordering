@@ -24,15 +24,15 @@
         <div class="container">
             <div class="row">
                   <div class="col-md-8">
-                      <form class="form-inline" action="/get_stream_wav" method="post" enctype="multipart/form-data">
-                          <input class="form-control mr-sm-2" type="file" name="upload_topping_wav">
+                      <form class="form-inline" action="/get_topping_upload_wav" method="post" enctype="multipart/form-data">
+                          <input class="form-control mr-sm-2" type="file" name="topping_upload_wav">
                           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Upload</button>
                       </form>
                   </div>
             </div>
         </div>
         <div id="msg" style="display: none;">
-            <p style="font-size:105%;">Audio uploaded successfully!</p>
+            <p style="font-size:105%;">Audio uploading!</p>
         </div>
         <div class="container" id="requests">
             <button class="btn" id="requestButton">Microphone</button>
@@ -40,26 +40,19 @@
         <div class="container" id="buttons">
             <button class="btn btn-default" id="startButton">Start Recording</button>
             <button class="btn btn-default" id="stopButton">Stop Recording</button>
+            <button class="btn btn-default" id="uploadButton">Upload</button>
         </div>
         <div>
             <ul class="list-unstyled" id="ul"></ul>
         </div>
-        <div>
-            <form action="/get_order" method="post">
-                <label>
-                    <br>
-                    <input class="btn" type="submit" value="Next">
-                </label>
-            </form>
-        </div>
     </body>
     <script>
         const form = document.querySelector("form");
-        const msg = document.querySelector('#msg');
-        form.addEventListener('submit', (e) =>
+        const msg = document.querySelector("#msg");
+        form.addEventListener("submit", (e) =>
         {
             e.preventDefault();
-            document.getElementById('msg').style.display = 'block';
+            document.getElementById("msg").style.display = "block";
             setTimeout(() => form.submit(), 3000);
         });
         let id = val => document.getElementById(val),
@@ -68,6 +61,7 @@
             requestButton = id("requestButton"),
             startButton = id("startButton"),
             stopButton = id("stopButton"),
+            uploadButton = id("uploadButton"),
             media,
             stream,
             recorder,
@@ -92,7 +86,7 @@
                 stream = _stream
                 recorder = new RecordRTC(stream,
                 {
-                    type: 'audio',
+                    type: "audio",
                     recorderType: RecordRTC.StereoAudioRecorder, // force for all browsers generate audio/wav
                     numberOfAudioChannels: 2
                 });
@@ -114,11 +108,20 @@
             recorder.stopRecording(stopRecordingCallback);
             log("end record");
         }
+        uploadButton.onclick = e =>
+        {
+            uploadFile();
+        }
+        function stopRecordingCallback()
+        {
+            audioChunks.push(recorder.getBlob());
+            displayFile();
+        }
         function displayFile()
         {
             let blob = new Blob(audioChunks, {type: media.type}),
                 url = URL.createObjectURL(blob),
-                li = document.createElement('li'),
+                li = document.createElement("li"),
                 audio = document.createElement(media.tag);
             audio.controls = true;
             audio.src = url;
@@ -129,18 +132,12 @@
         {
             let blob = new Blob(audioChunks, {type: media.type}),
                 data = new FormData();
-            data.set("record_topping_wav", blob, `record${media.ext}`);
-            fetch('/get_stream_wav',
+            data.set("topping_record_wav", blob, `record${media.ext}`);
+            fetch("/get_topping_record_wav",
             {
                 method:"POST",
                 body: data
             }).then(response => {log(response.status);});
-        }
-        function stopRecordingCallback()
-        {
-            audioChunks.push(recorder.getBlob());
-            displayFile();
-            uploadFile();
         }
     </script>
 </html>

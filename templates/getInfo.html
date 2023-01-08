@@ -61,7 +61,6 @@
             stopButton = id("stopButton"),
             uploadButton = id("uploadButton"),
             uploadRecordingButton = id("uploadRecordingButton"),
-            form = document.querySelector("form"),
             media,
             stream,
             recorder,
@@ -101,7 +100,6 @@
             recorder.startRecording();
             log("start record");
             document.getElementById("recordingMsg").style.display = "block";
-            setTimeout(() => form.submit(), 3000);
         }
         stopButton.onclick = e =>
         {
@@ -110,18 +108,15 @@
             recorder.stopRecording(stopRecordingCallback);
             log("end record");
             document.getElementById("recordingMsg").style.display = "none";
-            setTimeout(() => form.submit(), 3000);
         }
         uploadRecordingButton.onclick = e =>
         {
             uploadFile();
             document.getElementById("uploadRecordingMsg").style.display = "block";
-            setTimeout(() => form.submit(), 3000);
         }
         uploadButton.onclick = e =>
         {
             document.getElementById("uploadMsg").style.display = "block";
-            setTimeout(() => form.submit(), 3000);
         }
         function stopRecordingCallback()
         {

@@ -47,14 +47,6 @@
         </div>
     </body>
     <script>
-        const form = document.querySelector("form");
-        const msg = document.querySelector("#msg");
-        form.addEventListener("submit", (e) =>
-        {
-            e.preventDefault();
-            document.getElementById("msg").style.display = "block";
-            setTimeout(() => form.submit(), 3000);
-        });
         let id = val => document.getElementById(val),
             log = console.log.bind(console),
             ul = id("ul"),
@@ -62,6 +54,7 @@
             startButton = id("startButton"),
             stopButton = id("stopButton"),
             uploadButton = id("uploadButton"),
+            uploadRecordingButton = id("uploadRecordingButton"),
             media,
             stream,
             recorder,
@@ -95,6 +88,7 @@
         }
         startButton.onclick = e =>
         {
+            document.getElementById("recordingMsg").style.display = "block";
             audioChunks=[];
             startButton.disabled = true;
             stopButton.disabled = false;
@@ -103,14 +97,20 @@
         }
         stopButton.onclick = e =>
         {
+            document.getElementById("recordingMsg").style.display = "none";
             startButton.disabled = false;
             stopButton.disabled = true;
             recorder.stopRecording(stopRecordingCallback);
             log("end record");
         }
+        uploadRecordingButton.onclick = e =>
+        {
+            document.getElementById("uploadRecordingMsg").style.display = "block";
+            uploadFile();
+        }
         uploadButton.onclick = e =>
         {
-            uploadFile();
+            document.getElementById("uploadMsg").style.display = "block";
         }
         function stopRecordingCallback()
         {
@@ -135,9 +135,11 @@
             data.set("topping_record_wav", blob, `record${media.ext}`);
             fetch("/get_topping_record_wav",
             {
-                method:"POST",
+                method: "POST",
                 body: data
-            }).then(response => {log(response.status);});
+            })
+            .then(response => {log(response.status);})
+            .then(response => {location.href = "get_topping_redirect";});
         }
     </script>
 </html>

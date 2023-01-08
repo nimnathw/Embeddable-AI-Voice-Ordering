@@ -3,13 +3,13 @@
 # Install Prerequisites
 
 ```
-python3 -m pip install -r requirements.txt
+python3.8 -m pip install -r requirements.txt
 ```
 
 # Running the Server
 
 ```
-python3 app.py
+python3.8 app.py
 ```
 
 # Testing the Server

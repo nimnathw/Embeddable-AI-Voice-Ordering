@@ -58,7 +58,7 @@ def get_order():
     return render_template("getOrder.html", customerAddress=customer_address, orderSize=order_size[0], orderTopping=order_topping)
 
 
-@app.route("/get_info_upload_wav", methods=["POST"])
+@app.route("/get_info_upload_wav", methods=["GET", "POST"])
 def get_info_upload_wav():
     global address
     if "info_upload_wav" not in request.files:
@@ -74,9 +74,10 @@ def get_info_upload_wav():
     return redirect("/get_info_redirect")
 
 
-@app.route("/get_info_record_wav", methods=["POST"])
+@app.route("/get_info_record_wav", methods=["GET", "POST"])
 def get_info_record_wav():
     global address
+    """
     if "info_record_wav" not in request.files:
         return "No audio file found"
     else:
@@ -86,6 +87,7 @@ def get_info_record_wav():
         else:
             address = read_audio_file(file)
             print(address)
+    """
 
     return redirect("/get_info_redirect")
 

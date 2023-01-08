@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Skills Network Pizza App</title>
+        <style>
+            button { margin: 10px 5px; }
+            li { margin: 10px; }
+            body { width: 90%; max-width: 960px; margin: 0px auto; }
+            #buttons { display: none; }
+            h1{ margin: 100px; }
+        </style>
+        <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+    </head>
+    <body>
+        <h1>RecordRTC API</h1>
+        <div id="requests">
+            <button class="btn btn-default" id="requestButton">Microphone</button>
+        </div>
+        <div id="buttons">
+            <button class="btn btn-default" id="startButton">Start Recording</button>
+            <button class="btn btn-default" id="stopButton">Stop Recording</button>
+        </div>
+        <div>
+            <ul class="list-unstyled" id="ul"></ul>
+        </div>
+        <script> "use strict"
+            let id = val => document.getElementById(val),
+                log = console.log.bind(console),
+                ul = id("ul"),
+                requestButton = id("requestButton"),
+                startButton = id("startButton"),
+                stopButton = id("stopButton"),
+                media,
+                stream,
+                recorder,
+                audioChunks;
+            requestButton.onclick = e =>
+            {
+                let mediaOptions =
+                {
+                    audio:
+                    {
+                        tag: "audio",
+                        type: "audio/wav",
+                        ext: ".wav",
+                        category: {audio: true, video:false}
+                    }
+                };
+                media = mediaOptions.audio;
+                id("requests").style.display = "none";
+                id("buttons").style.display = "inherit";
+                navigator.mediaDevices.getUserMedia(media.category).then(_stream =>
+                {
+                    stream = _stream
+                    recorder = new RecordRTC(stream,
+                    {
+                        type: 'audio',
+                        recorderType: RecordRTC.StereoAudioRecorder, // force for all browsers generate audio/wav
+                        numberOfAudioChannels: 2
+                    });
+                    log("ready for recording");
+                }).catch(log);
+            }
+            startButton.onclick = e =>
+            {
+                audioChunks=[];
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                recorder.startRecording();
+                log("start record");
+            }
+            stopButton.onclick = e =>
+            {
+                startButton.disabled = false;
+                stopButton.disabled = true;
+                recorder.stopRecording(stopRecordingCallback);
+                log("end record");
+            }
+            function displayFile()
+            {
+                let blob = new Blob(audioChunks, {type: media.type}),
+                    url = URL.createObjectURL(blob),
+                    li = document.createElement('li'),
+                    audio = document.createElement(media.tag);
+                audio.controls = true;
+                audio.src = url;
+                li.appendChild(audio);
+                ul.appendChild(li);
+            }
+            function uploadFile()
+            {
+                let blob = new Blob(audioChunks, {type: media.type}),
+                    data = new FormData();
+                data.set("audio", blob, `record${media.ext}`);
+                fetch('/get_stream_wav',
+                {
+                    method:"POST",
+                    body: data
+                }).then(response => {log(response.status);});
+            }
+            function stopRecordingCallback()
+            {
+                audioChunks.push(recorder.getBlob());
+                displayFile();
+                uploadFile();
+            }
+        </script>
+    </body>
+</html>

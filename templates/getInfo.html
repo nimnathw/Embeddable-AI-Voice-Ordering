@@ -20,19 +20,19 @@
         <audio controls autoplay>
             <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/intro.wav" type="audio/wav">
         </audio>
-        <p style="font-size:120%;">Upload your address information:</p>
+        <h5 style="font-size:120%;">Upload your address information:</h5>
         <div class="container">
             <div class="row">
                   <div class="col-md-8">
-                      <form class="form-inline" action="/get_stream_wav" method="post" enctype="multipart/form-data">
-                          <input class="form-control mr-sm-2" type="file" name="upload_info_wav">
-                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Upload</button>
+                      <form class="form-inline" action="/get_info_upload_wav" method="post" enctype="multipart/form-data">
+                          <input class="form-control mr-sm-2" type="file" name="info_upload_wav">
+                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="uploadButton">Upload</button>
                       </form>
                   </div>
             </div>
         </div>
-        <div id="msg" style="display: none;">
-            <p style="font-size:105%;">Audio uploaded successfully!</p>
+        <div id="uploadMsg" style="display: none;">
+            <p style="font-size:105%;">Audio uploading!</p>
         </div>
         <div class="container" id="requests">
             <button class="btn" id="requestButton">Microphone</button>
@@ -40,34 +40,28 @@
         <div class="container" id="buttons">
             <button class="btn btn-default" id="startButton">Start Recording</button>
             <button class="btn btn-default" id="stopButton">Stop Recording</button>
+            <button class="btn btn-default" id="uploadRecordingButton">Upload</button>
         </div>
         <div>
             <ul class="list-unstyled" id="ul"></ul>
         </div>
-        <div>
-            <form action="/get_topping" method="post">
-                <label>
-                    <br>
-                    <input class="btn" type="submit" value="Next">
-                </label>
-            </form>
+        <div id="recordingMsg" style="display: none;">
+            <p style="font-size:105%;">Recording!</p>
+        </div>
+        <div id="uploadRecordingMsg" style="display: none;">
+            <p style="font-size:105%;">Audio uploading!</p>
         </div>
     </body>
     <script>
-        const form = document.querySelector("form");
-        const msg = document.querySelector("#msg");
-        form.addEventListener("submit", (e) =>
-        {
-            e.preventDefault();
-            document.getElementById("msg").style.display = "block";
-            setTimeout(() => form.submit(), 3000);
-        });
         let id = val => document.getElementById(val),
             log = console.log.bind(console),
             ul = id("ul"),
             requestButton = id("requestButton"),
             startButton = id("startButton"),
             stopButton = id("stopButton"),
+            uploadButton = id("uploadButton"),
+            uploadRecordingButton = id("uploadRecordingButton"),
+            form = document.querySelector("form"),
             media,
             stream,
             recorder,
@@ -92,7 +86,7 @@
                 stream = _stream
                 recorder = new RecordRTC(stream,
                 {
-                    type: 'audio',
+                    type: "audio",
                     recorderType: RecordRTC.StereoAudioRecorder, // force for all browsers generate audio/wav
                     numberOfAudioChannels: 2
                 });
@@ -106,6 +100,8 @@
             stopButton.disabled = false;
             recorder.startRecording();
             log("start record");
+            document.getElementById("recordingMsg").style.display = "block";
+            setTimeout(() => form.submit(), 3000);
         }
         stopButton.onclick = e =>
         {
@@ -113,12 +109,30 @@
             stopButton.disabled = true;
             recorder.stopRecording(stopRecordingCallback);
             log("end record");
+            document.getElementById("recordingMsg").style.display = "none";
+            setTimeout(() => form.submit(), 3000);
+        }
+        uploadRecordingButton.onclick = e =>
+        {
+            uploadFile();
+            document.getElementById("uploadRecordingMsg").style.display = "block";
+            setTimeout(() => form.submit(), 3000);
+        }
+        uploadButton.onclick = e =>
+        {
+            document.getElementById("uploadMsg").style.display = "block";
+            setTimeout(() => form.submit(), 3000);
+        }
+        function stopRecordingCallback()
+        {
+            audioChunks.push(recorder.getBlob());
+            displayFile();
         }
         function displayFile()
         {
             let blob = new Blob(audioChunks, {type: media.type}),
                 url = URL.createObjectURL(blob),
-                li = document.createElement('li'),
+                li = document.createElement("li"),
                 audio = document.createElement(media.tag);
             audio.controls = true;
             audio.src = url;
@@ -129,18 +143,12 @@
         {
             let blob = new Blob(audioChunks, {type: media.type}),
                 data = new FormData();
-            data.set("record_info_wav", blob, `record${media.ext}`);
-            fetch('/get_stream_wav',
+            data.set("info_record_wav", blob, `record${media.ext}`);
+            fetch("/get_info_record_wav",
             {
                 method:"POST",
                 body: data
             }).then(response => {log(response.status);});
-        }
-        function stopRecordingCallback()
-        {
-            audioChunks.push(recorder.getBlob());
-            displayFile();
-            uploadFile();
         }
     </script>
 </html>

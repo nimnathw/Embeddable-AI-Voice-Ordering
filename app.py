@@ -1,7 +1,7 @@
 from suoportFunctions import *
 
 app = Flask(__name__)
-address, order, audioName = None, None, "customer.wav"
+address, order, record_audio, order_audio = None, None, "record.wav", "order.wav"
 
 
 @app.route("/")
@@ -53,12 +53,11 @@ def get_order():
     result = str("Thank you for using the Skills Network Pizza App to place your order. I detected you want a " + order_size[0]
                  + " pizza with the following topping: " + " ".join(map(str, order_topping)) + ". " + "The delivery address is "
                  + customer_address + ".")
-    text_to_speech(result, "customer.wav")
-
+    text_to_speech(result, "order.wav")
     return render_template("getOrder.html", customerAddress=customer_address, orderSize=order_size[0], orderTopping=order_topping)
 
 
-@app.route("/get_info_upload_wav", methods=["GET", "POST"])
+@app.route("/get_info_upload_wav", methods=["POST"])
 def get_info_upload_wav():
     global address
     if "info_upload_wav" not in request.files:
@@ -70,14 +69,12 @@ def get_info_upload_wav():
         else:
             address = speech_to_text(file)
             print(address)
+    return redirect(url_for("get_info_redirect"))
 
-    return redirect("/get_info_redirect")
 
-
-@app.route("/get_info_record_wav", methods=["GET", "POST"])
+@app.route("/get_info_record_wav", methods=["POST"])
 def get_info_record_wav():
     global address
-    """
     if "info_record_wav" not in request.files:
         return "No audio file found"
     else:
@@ -85,11 +82,9 @@ def get_info_record_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            address = read_audio_file(file)
+            address = get_local_audio_text(file, record_audio)
             print(address)
-    """
-
-    return redirect("/get_info_redirect")
+    return render_template("getInfoRedirect.html")
 
 
 @app.route("/get_topping_upload_wav", methods=["POST"])
@@ -104,8 +99,7 @@ def get_topping_upload_wav():
         else:
             order = speech_to_text(file)
             print(order)
-
-    return redirect("/get_topping_redirect")
+    return render_template("getToppingRedirect.html")
 
 
 @app.route("/get_topping_record_wav", methods=["POST"])
@@ -118,9 +112,8 @@ def get_topping_record_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            order = read_audio_file(file)
+            order = get_local_audio_text(file, record_audio)
             print(order)
-
     return redirect("/get_topping_redirect")
 
 
@@ -133,16 +126,9 @@ def audio_name():
 """
 
 
-@app.route("/play_stream_wav")
-def play_stream_wav():
-    def generate(name):
-        with open(str("./" + name), "rb") as wav:
-            data = wav.read(1024)
-            while data:
-                yield data
-                data = wav.read(1024)
-
-    return Response(generate(audioName), mimetype="audio/x-wav")
+@app.route("/play_local_wav")
+def play_local_wav():
+    return Response(get_local_wav_file(order_audio), mimetype="audio/x-wav")
 
 
 if __name__ == "__main__":

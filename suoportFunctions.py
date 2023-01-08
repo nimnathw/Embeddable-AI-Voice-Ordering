@@ -7,14 +7,22 @@ import yake
 import pandas as pd
 from zipfile import ZipFile
 from flask import Flask, render_template, request, flash, redirect, Response
+from difflib import SequenceMatcher
+from nltk.corpus import stopwords
 import nltk
 nltk.download('stopwords')
-from nltk.corpus import stopwords
-from difflib import SequenceMatcher
 
 
+def read_audio_file(file):
+    with open("record.wav", "wb") as audio:
+        file.save(audio)
+        print("file uploaded successfully")
+    with open("record.wav", "rb") as audio:
+        text = speech_to_text(audio)
 
-# decompress the zip files
+    return text
+
+
 def read_zip_file(zip_name):
     files = str(os.getcwd() + "/" + zip_name + ".zip")
     with ZipFile(files, "r") as zip_object:
@@ -26,14 +34,13 @@ def read_zip_file(zip_name):
     return sorted(folder, reverse=False)
 
 
-# get the values from the speech data
 def speech_to_text(file):
     # speech url, here port defines on basis of kubernetes port forward
     speech_to_text_url = "http://localhost:1081/speech-to-text/api/v1/recognize?"
     # setting up params models
     params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.6"}
     headers = {"Content-Type": "audio/wav"}
-    result = requests.post(speech_to_text_url, headers=headers, params=params, data=file) # data=open(file, 'rb')
+    result = requests.post(speech_to_text_url, headers=headers, params=params, data=file)  # data=open(file, 'rb')
 
     # get transcript from json result
     output = ""
@@ -54,17 +61,17 @@ def text_to_speech(texts, name):
     # speech url, here port defines on blsasis of kubernetes port forword
     text_to_speech_url = 'http://localhost:1080/text-to-speech/api/v1/synthesize'
     # setting up the headers for post request to service
-    headers = {'Content-Type':'application/json', 'Accept':'audio/wav'}
+    headers = {'Content-Type': 'application/json', 'Accept': 'audio/wav'}
     # etting up params
-    params = {'output':'output_text.wav'}
+    params = {'output': 'output_text.wav'}
     # creating a data in JSON format to send as a parameter to the service
-    words = json.dumps({"text":texts})
+    words = json.dumps({"text": texts})
     # method to get the Voice data from the text service
-    request =requests.post(text_to_speech_url, headers=headers, params=params, data=words)
+    request = requests.post(text_to_speech_url, headers=headers, params=params, data=words)
     print(request.status_code)
     if request.status_code != 200:
         print("TTS Service status:", request.text)
-        print("Creating file ---",name)
+        print("Creating file ---", name)
     with open(name, mode='bx') as f:
         f.write(request.content)
 
@@ -95,8 +102,8 @@ def get_keywords(text):
 def clean_text(text):
     stop_words = stopwords.words('english')
     stop_words.extend(["gimme", "lemme", "cause", "'cuz", "imma", "gonna", "wanna", "please",
-    "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy","day",
-    "hey", "yoo", "delivery", "piece", "want", "order"])
-    clean_text = " ".join([word.replace('X','').replace('/','') for word in text.split() if word.lower() not in stop_words])
+                       "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy", "day",
+                       "hey", "yoo", "delivery", "piece", "want", "order"])
+    clean_text = " ".join([word.replace('X', '').replace('/', '') for word in text.split() if word.lower() not in stop_words])
 
     return clean_text

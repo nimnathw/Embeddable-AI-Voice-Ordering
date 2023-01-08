@@ -6,21 +6,11 @@ import requests
 import yake
 import pandas as pd
 from zipfile import ZipFile
-from flask import Flask, render_template, request, flash, redirect, Response
+from flask import Flask, render_template, request, flash, redirect, Response, url_for
 from difflib import SequenceMatcher
 from nltk.corpus import stopwords
 import nltk
 nltk.download('stopwords')
-
-
-def read_audio_file(file):
-    with open("record.wav", "wb") as audio:
-        file.save(audio)
-        print("file uploaded successfully")
-    with open("record.wav", "rb") as audio:
-        text = speech_to_text(audio)
-
-    return text
 
 
 def read_zip_file(zip_name):
@@ -107,3 +97,21 @@ def clean_text(text):
     clean_text = " ".join([word.replace('X', '').replace('/', '') for word in text.split() if word.lower() not in stop_words])
 
     return clean_text
+
+
+def get_local_audio_text(file, file_name):
+    with open(file_name, "wb") as audio:
+        file.save(audio)
+        print("file uploaded successfully")
+    with open(file_name, "rb") as audio:
+        text = speech_to_text(audio)
+
+    return text
+
+
+def get_local_wav_file(file_name):
+    with open(str("./" + file_name), "rb") as wav:
+        data = wav.read(1024)
+        while data:
+            yield data
+            data = wav.read(1024)

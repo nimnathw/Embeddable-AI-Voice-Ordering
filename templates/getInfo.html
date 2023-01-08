@@ -94,25 +94,25 @@
         }
         startButton.onclick = e =>
         {
+            document.getElementById("recordingMsg").style.display = "block";
             audioChunks=[];
             startButton.disabled = true;
             stopButton.disabled = false;
             recorder.startRecording();
             log("start record");
-            document.getElementById("recordingMsg").style.display = "block";
         }
         stopButton.onclick = e =>
         {
+            document.getElementById("recordingMsg").style.display = "none";
             startButton.disabled = false;
             stopButton.disabled = true;
             recorder.stopRecording(stopRecordingCallback);
             log("end record");
-            document.getElementById("recordingMsg").style.display = "none";
         }
         uploadRecordingButton.onclick = e =>
         {
-            uploadFile();
             document.getElementById("uploadRecordingMsg").style.display = "block";
+            uploadFile();
         }
         uploadButton.onclick = e =>
         {
@@ -141,9 +141,11 @@
             data.set("info_record_wav", blob, `record${media.ext}`);
             fetch("/get_info_record_wav",
             {
-                method:"POST",
+                method: "POST",
                 body: data
-            }).then(response => {log(response.status);});
+            })
+            .then(response => {log(response.status);})
+            .then(response => {location.href = "get_info_redirect";});
         }
     </script>
 </html>

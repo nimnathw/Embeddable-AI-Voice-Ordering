@@ -1,13 +1,25 @@
+<!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="UTF-8">
         <title>Skills Network Pizza App</title>
+        <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <style>
+            button { margin: 10px 5px; }
+            li { margin: 10px; }
+            body { width: 90%; max-width: 960px; margin: 0px auto; }
+            #buttons { display: none; }
+            h1{ margin: 45px; }
+        </style>
     </head>
     <body>
         <h1>Skills Network Pizza App</h1>
-        <form action="/get_info" method="post">
-            <label>
-                <input type="submit" value="Start">
-            </label>
-        </form>
+        <div>
+            <form action="/get_info" method="post">
+                <label>
+                    <input class="btn" type="submit" value="Start">
+                </label>
+            </form>
+        </div>
     </body>
 </html>

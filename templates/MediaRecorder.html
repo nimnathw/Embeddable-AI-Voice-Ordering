@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Skills Network Pizza App</title>
+        <style>
+            button { margin: 10px 5px; }
+            li { margin: 10px; }
+            body { width: 90%; max-width: 960px; margin: 0px auto; }
+            #buttons { display: none; }
+            h1{ margin: 100px; }
+        </style>
+        <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <h1>MediaRecorder API</h1>
+        <div id="requests">
+            <button class="btn btn-default" id="requestButton">Recording</button>
+        </div>
+        <div id="buttons">
+            <button class="btn btn-default" id="startButton">Start Recording</button>
+            <button class="btn btn-default" id="stopButton">Stop Recording</button>
+        </div>
+        <div>
+            <ul class="list-unstyled" id="ul"></ul>
+        </div>
+        <script> "use strict"
+            let id = val => document.getElementById(val),
+                log = console.log.bind(console),
+                ul = id("ul"),
+                requestButton = id("requestButton"),
+                startButton = id("startButton"),
+                stopButton = id("stopButton"),
+                media,
+                stream,
+                recorder,
+                audioChunks;
+            requestButton.onclick = e =>
+            {
+                let mediaOptions =
+                {
+                    audio:
+                    {
+                        tag: "audio",
+                        type: "audio/webm",
+                        ext: ".webm",
+                        category: {audio: true, video:false}
+                    }
+                };
+                media = mediaOptions.audio;
+                id("requests").style.display = "none";
+                id("buttons").style.display = "inherit";
+                navigator.mediaDevices.getUserMedia(media.category).then(_stream =>
+                {
+                    stream = _stream
+                    recorder = new MediaRecorder(stream);
+                    recorder.ondataavailable = e =>
+                    {
+                        audioChunks.push(e.data);
+                        log(audioChunks);
+                        if(recorder.state === "inactive")
+                        {
+                            createLink();
+                            uploadFile();
+                        }
+                    };
+                    log("ready for recording");
+                }).catch(log);
+            }
+            startButton.onclick = e =>
+            {
+                audioChunks=[];
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                recorder.start();
+                log("start record");
+            }
+            stopButton.onclick = e =>
+            {
+                startButton.disabled = false;
+                stopButton.disabled = true;
+                recorder.stop();
+                log("end record");
+            }
+            function createLink()
+            {
+                let blob = new Blob(audioChunks, {type: media.type}),
+                    url = URL.createObjectURL(blob),
+                    li = document.createElement('li'),
+                    link = document.createElement('a'),
+                    audio = document.createElement(media.tag);
+                log(blob);
+                audio.controls = true;
+                audio.src = url;
+                link.href = url;
+                link.download = `testingAudio${media.ext}`;
+                link.innerHTML = `Download ${link.download}`;
+                li.appendChild(audio);
+                li.appendChild(link);
+                ul.appendChild(li);
+            }
+            function uploadFile()
+            {
+                let blob = new Blob(audioChunks, {type: media.type}),
+                    data = new FormData();
+                data.set("audio", blob, `record${media.ext}`);
+                fetch('/get_stream_wav',
+                {
+                    method:"POST",
+                    body: data
+                }).then(response => {log(response.status);});
+            }
+        </script>
+    </body>
+</html>

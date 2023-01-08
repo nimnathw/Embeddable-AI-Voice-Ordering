@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Skills Network Pizza App</title>
+        <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <style>
+            button { margin: 10px 5px; }
+            li { margin: 10px; }
+            body { width: 90%; max-width: 960px; margin: 0px auto; }
+            #buttons { display: none; }
+            h1{ margin: 45px; }
+        </style>
+        <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+    </head>
+    <body>
+        <h1>Skills Network Pizza App</h1>
+        <h5 style="font-size:120%;">Thank you for uploading the order details!</h5>
+        <h5 style="font-size:120%;">Please click the "Next" button to continue.</h5>
+        <div>
+            <form action="/get_order" method="post">
+                <label>
+                    <br>
+                    <input class="btn" type="submit" value="Next">
+                </label>
+            </form>
+        </div>
+    </body>
+</html>

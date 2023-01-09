@@ -18,15 +18,15 @@
     <body>
         <h1>Skills Network Pizza App</h1>
         <audio controls autoplay>
-            <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/topping.wav" type="audio/wav">
+            <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/intro.wav" type="audio/wav">
         </audio>
-        <p style="font-size:120%;">Upload your order details:</p>
+        <h5 style="font-size:120%;">Upload your order details:</h5>
         <div class="container">
             <div class="row">
                   <div class="col-md-8">
                       <form class="form-inline" action="/get_topping_upload_wav" method="post" enctype="multipart/form-data">
                           <input class="form-control mr-sm-2" type="file" name="topping_upload_wav">
-                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Upload</button>
+                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="uploadButton">Upload</button>
                       </form>
                   </div>
             </div>
@@ -40,7 +40,7 @@
         <div class="container" id="buttons">
             <button class="btn btn-default" id="startButton">Start Recording</button>
             <button class="btn btn-default" id="stopButton">Stop Recording</button>
-            <button class="btn btn-default" id="uploadButton">Upload</button>
+            <button class="btn btn-default" id="uploadRecordingButton">Upload</button>
         </div>
         <div>
             <ul class="list-unstyled" id="ul"></ul>

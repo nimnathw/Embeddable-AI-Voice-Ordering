@@ -1,7 +1,7 @@
 from suoportFunctions import *
 
 app = Flask(__name__)
-customer_address, raw_order, pizza_size, pizza_topping, play_audio = None, None, None, None, None, None
+customer_address, raw_order, pizza_size, pizza_topping, play_audio = None, None, None, None, None
 
 
 @app.route("/")

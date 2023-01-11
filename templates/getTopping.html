@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Skills Network Pizza App</title>
+        <title>DoughNation App</title>
         <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <style>
             button { margin: 10px 5px; }
@@ -15,32 +15,19 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
     </head>
-    <body>
-        <h1>Skills Network Pizza App</h1>
-        <audio controls autoplay>
-            <source src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/topping.wav" type="audio/wav">
+        <body>
+        <h1>DoughNation App</h1>
+        <audio autoplay>
+            <source src="/play_local_wav" type="audio/wav">
         </audio>
         <h5 style="font-size:120%;">Upload your order details:</h5>
-        <div class="container">
-            <div class="row">
-                  <div class="col-md-8">
-                      <form class="form-inline" action="/get_topping_upload_wav" method="post" enctype="multipart/form-data">
-                          <input class="form-control mr-sm-2" type="file" name="topping_upload_wav">
-                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="uploadButton">Upload</button>
-                      </form>
-                  </div>
-            </div>
-        </div>
-        <div id="uploadMsg" style="display: none;">
-            <p style="font-size:105%;">Audio uploading!</p>
-        </div>
         <div class="container" id="requests">
             <button class="btn" id="requestButton">Microphone</button>
         </div>
         <div class="container" id="buttons">
             <button class="btn btn-default" id="startButton">Start Recording</button>
             <button class="btn btn-default" id="stopButton">Stop Recording</button>
-            <button class="btn btn-default" id="uploadRecordingButton">Upload</button>
+            <button class="btn btn-default" id="uploadRecordingButton">Continue</button>
         </div>
         <div>
             <ul class="list-unstyled" id="ul"></ul>
@@ -49,6 +36,19 @@
             <p style="font-size:105%;">Recording!</p>
         </div>
         <div id="uploadRecordingMsg" style="display: none;">
+            <p style="font-size:105%;">Audio uploading!</p>
+        </div>
+        <div class="container">
+            <div class="row">
+                  <div class="col-md-8">
+                      <form class="form-inline" action="/get_topping_upload_wav" method="POST" enctype="multipart/form-data">
+                          <input class="form-control mr-sm-2" type="file" name="topping_upload_wav">
+                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="uploadButton">Continue</button>
+                      </form>
+                  </div>
+            </div>
+        </div>
+        <div id="uploadMsg" style="display: none;">
             <p style="font-size:105%;">Audio uploading!</p>
         </div>
     </body>

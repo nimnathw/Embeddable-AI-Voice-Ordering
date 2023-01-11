@@ -47,7 +47,7 @@ def get_topping_redirect():
     pizza_size, pizza_topping = get_keywords(clean_order)
 
     play_audio = "topping_repeat.wav"
-    result = "Just wanted to make sure, did ya order a " + pizza_size + " pizza with: " + " ".join(map(str, pizza_topping)) + \
+    result = "Just wanted to make sure, did ya order a " + pizza_size[0] + " pizza with: " + " ".join(map(str, pizza_topping)) + \
              " on it? If not, no worries, just give the recording again button another press."
     text_to_speech(result, play_audio)
     return render_template("getToppingRedirect.html", pizzaSize=pizza_size[0], pizzaTopping=pizza_topping)

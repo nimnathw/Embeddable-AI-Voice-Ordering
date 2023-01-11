@@ -20,9 +20,9 @@
         <audio autoplay>
             <source src="/play_local_wav" type="audio/wav">
         </audio>
-        <h5 style="font-size:120%;">Upload your address information:</h5>
+        <h5 style="font-size:120%;">Where should we send your order to?</h5>
         <div class="container" id="requests">
-            <button class="btn" id="requestButton">Microphone</button>
+            <button class="btn" id="requestButton">Place Your Order</button>
         </div>
         <div class="container" id="buttons">
             <button class="btn btn-default" id="startButton">Start Recording</button>
@@ -38,7 +38,7 @@
         <div id="uploadRecordingMsg" style="display: none;">
             <p style="font-size:105%;">Audio uploading!</p>
         </div>
-        <div class="container">
+        <div class="container" style="display: none;">
             <div class="row">
                   <div class="col-md-8">
                       <form class="form-inline" action="/get_info_upload_wav" method="POST" enctype="multipart/form-data">

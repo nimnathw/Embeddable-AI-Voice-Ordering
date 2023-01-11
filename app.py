@@ -13,7 +13,7 @@ def root():
 def get_info():
     global play_audio
     play_audio = "intro.wav"
-    result = "Welcome to AI pizza, how's it going? Where should we send your delicious pizza order to?"
+    result = "Welcome to Dough Nation, how's it going? Where should we send your delicious pizza order to?"
     text_to_speech(result, play_audio)
     return render_template("getInfo.html")
 
@@ -23,8 +23,8 @@ def get_info_redirect():
     global customer_address, play_audio
     customer_address = clean_text(raw_address)  # clean the stop words from audio files
     play_audio = "intro_repeat.wav"
-    result = "Just want to confirm, did ya ask for the pizza to be dropped off at " + customer_address\
-             + " ? If not, no worries, just give the recording again button a tap."
+    result = "Just want to confirm, did ya ask for the pizza to be dropped off at " + customer_address + \
+             " ? If not, no worries, just give the recording again button a tap."
 
     text_to_speech(result, play_audio)
     return render_template("getInfoRedirect.html", customerAddress=customer_address)
@@ -66,8 +66,9 @@ def get_order():
     elif not pizza_topping:
         print("missing pizza topping")
 
-    result = str("Thanks for using the AI Pizza App to place your order. Just wanted to double check that I got it right, ya want a " + pizza_size[0]
-                 + " pizza with " + " ".join(map(str, pizza_topping)) + ". And the delivery address is " + customer_address + ", correct?")
+    result = str("Thanks for using the Dough Nation App to place your order. Just wanted to double check that I got it right, ya want a " + 
+                 pizza_size[0] + " pizza with " + " ".join(map(str, pizza_topping)) + ". And the delivery address is " + customer_address + 
+                 ", correct?")
     text_to_speech(result, play_audio)
     return render_template("getOrder.html", customerAddress=customer_address, orderSize=pizza_size[0], orderTopping=pizza_topping)
 

@@ -1,7 +1,7 @@
 from suoportFunctions import *
 
 app = Flask(__name__)
-raw_address, customer_address, raw_order, pizza_size, pizza_topping, play_audio = None, None, None, None, None, None
+customer_address, raw_order, pizza_size, pizza_topping, play_audio = None, None, None, None, None, None
 
 
 @app.route("/")
@@ -20,8 +20,7 @@ def get_info():
 
 @app.route("/get_info_redirect", methods=["GET", "POST"])
 def get_info_redirect():
-    global customer_address, play_audio
-    customer_address = clean_text(raw_address)  # clean the stop words from audio files
+    global play_audio
     play_audio = "intro_repeat.wav"
     result = "Just want to confirm, did ya ask for the pizza to be dropped off at " + customer_address + \
              " ? If not, no worries, just give the recording again button a tap."
@@ -75,7 +74,7 @@ def get_order():
 
 @app.route("/get_info_upload_wav", methods=["POST"])
 def get_info_upload_wav():
-    global raw_address
+    global customer_address
     if "info_upload_wav" not in request.files:
         return "No audio file found"
     else:
@@ -83,14 +82,14 @@ def get_info_upload_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            raw_address = speech_to_text(file)
-            print(raw_address)
+            customer_address = speech_to_text(file)
+            print(customer_address)
     return redirect(url_for("get_info_redirect"))
 
 
 @app.route("/get_info_record_wav", methods=["POST"])
 def get_info_record_wav():
-    global raw_address
+    global customer_address
     if "info_record_wav" not in request.files:
         return "No audio file found"
     else:
@@ -98,8 +97,8 @@ def get_info_record_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            raw_address = get_local_audio_text(file, "info_record.wav")
-            print(raw_address)
+            customer_address = get_local_audio_text(file, "info_record.wav")
+            print(customer_address)
     return render_template("getInfoRedirect.html")
 
 

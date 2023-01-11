@@ -1,7 +1,7 @@
 from suoportFunctions import *
 
 app = Flask(__name__)
-address, order, record_audio, order_audio = None, None, "record.wav", "order.wav"
+raw_address, customer_address, raw_order, pizza_size, pizza_topping, record_audio, play_audio = None, None, None, None, None, None, None
 
 
 @app.route("/")
@@ -11,55 +11,70 @@ def root():
 
 @app.route("/get_info", methods=["POST"])
 def get_info():
+    global play_audio
+    play_audio = "intro.wav"
+    result = "Welcome to AI pizza, how's it going? Where should we send your delicious pizza order to?"
+    text_to_speech(result, play_audio)
     return render_template("getInfo.html")
 
 
 @app.route("/get_info_redirect", methods=["GET", "POST"])
 def get_info_redirect():
-    return render_template("getInfoRedirect.html")
+    global customer_address, play_audio
+    customer_address = clean_text(raw_address)  # clean the stop words from audio files
+    play_audio = "intro_repeat.wav"
+    result = "Just want to confirm, did ya ask for the pizza to be dropped off at " + customer_address\
+             + " ? If not, no worries, just give the recording again button a tap."
+
+    text_to_speech(result, play_audio)
+    return render_template("getInfoRedirect.html", customerAddress=customer_address)
 
 
 @app.route("/get_topping", methods=["POST"])
 def get_topping():
-    """
-    # call the Bash command to get sample audio files
-    bash_command = "wget -c https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-GPXX0E8TEN/labs/data/customer_order.zip"
-    os.system(bash_command)
-    read_zip_file("customer_order")
-    """
+    global play_audio
+    play_audio = "topping.wav"
+    result = "What size of pizza are you looking for? We got three options: large, medium, and small. " \
+             "Also, what kind of toppings do you want on your pizza? We have pepperoni, bacon, chicken, anchovies, " \
+             "mushroom, onion, black olives, and green pepper."
+    text_to_speech(result, play_audio)
     return render_template("getTopping.html")
 
 
 @app.route("/get_topping_redirect", methods=["GET", "POST"])
 def get_topping_redirect():
-    return render_template("getToppingRedirect.html")
+    global pizza_size, pizza_topping, play_audio
+    clean_order = clean_text(raw_order)  # clean the stop words from audio files
+    pizza_size, pizza_topping = get_keywords(clean_order)
+
+    play_audio = "topping_repeat.wav"
+    result = "Just wanted to make sure, did ya order a " + pizza_size + " pizza with: " + " ".join(map(str, pizza_topping)) + \
+             " on it? If not, no worries, just give the recording again button another press."
+    text_to_speech(result, play_audio)
+    return render_template("getToppingRedirect.html", pizzaSize=pizza_size[0], pizzaTopping=pizza_topping)
 
 
 @app.route("/get_order", methods=["POST"])
 def get_order():
-    # clean the stop words from audio files
-    customer_address = clean_text(address)
-    clean_order = clean_text(order)
-    order_size, order_topping = get_keywords(clean_order)
-
+    global play_audio
+    play_audio = "order.wav"
     if not customer_address:
         print("missing address")
-    elif not order_size:
-        print("missing order size")
+    elif not pizza_size:
+        print("missing pizza size")
         order_size = ["Not defined"]
-    elif not order_topping:
-        print("missing order topping")
+    elif not pizza_topping:
+        print("missing pizza topping")
 
-    result = str("Thank you for using the Skills Network Pizza App to place your order. I detected you want a " + order_size[0]
-                 + " pizza with the following topping: " + " ".join(map(str, order_topping)) + ". " + "The delivery address is "
-                 + customer_address + ".")
-    text_to_speech(result, "order.wav")
-    return render_template("getOrder.html", customerAddress=customer_address, orderSize=order_size[0], orderTopping=order_topping)
+    result = str("Thanks for using the AI Pizza App to place your order. Just wanted to double check that I got it right, ya want a " + pizza_size[0]
+                 + " pizza with " + " ".join(map(str, pizza_topping)) + ". And the delivery address is " + customer_address + ", correct?")
+    text_to_speech(result, play_audio)
+    return render_template("getOrder.html", customerAddress=customer_address, orderSize=pizza_size[0], orderTopping=pizza_topping)
 
 
 @app.route("/get_info_upload_wav", methods=["POST"])
 def get_info_upload_wav():
-    global address
+    global raw_address
     if "info_upload_wav" not in request.files:
         return "No audio file found"
     else:
@@ -67,14 +82,14 @@ def get_info_upload_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            address = speech_to_text(file)
-            print(address)
+            raw_address = speech_to_text(file)
+            print(raw_address)
     return redirect(url_for("get_info_redirect"))
 
 
 @app.route("/get_info_record_wav", methods=["POST"])
 def get_info_record_wav():
-    global address
+    global raw_address
     if "info_record_wav" not in request.files:
         return "No audio file found"
     else:
@@ -82,14 +97,14 @@ def get_info_record_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            address = get_local_audio_text(file, record_audio)
-            print(address)
+            raw_address = get_local_audio_text(file, record_audio)
+            print(raw_address)
     return render_template("getInfoRedirect.html")
 
 
 @app.route("/get_topping_upload_wav", methods=["POST"])
 def get_topping_upload_wav():
-    global order
+    global raw_order
     if "topping_upload_wav" not in request.files:
         return "No audio file found"
     else:
@@ -97,14 +112,14 @@ def get_topping_upload_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            order = speech_to_text(file)
-            print(order)
+            raw_order = speech_to_text(file)
+            print(raw_order)
     return render_template("getToppingRedirect.html")
 
 
 @app.route("/get_topping_record_wav", methods=["POST"])
 def get_topping_record_wav():
-    global order
+    global raw_order
     if "topping_record_wav" not in request.files:
         return "No audio file found"
     else:
@@ -112,8 +127,8 @@ def get_topping_record_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            order = get_local_audio_text(file, record_audio)
-            print(order)
+            raw_order = get_local_audio_text(file, record_audio)
+            print(raw_order)
     return redirect("/get_topping_redirect")
 
 
@@ -128,7 +143,7 @@ def audio_name():
 
 @app.route("/play_local_wav")
 def play_local_wav():
-    return Response(get_local_wav_file(order_audio), mimetype="audio/x-wav")
+    return Response(get_local_wav_file(play_audio), mimetype="audio/x-wav")
 
 
 if __name__ == "__main__":

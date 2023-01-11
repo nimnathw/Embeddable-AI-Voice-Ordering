@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Skills Network Pizza App</title>
+        <title>DoughNation App</title>
         <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <style>
             button { margin: 10px 5px; }
@@ -16,14 +16,27 @@
         <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
     </head>
     <body>
-        <h1>Skills Network Pizza App</h1>
-        <h5 style="font-size:120%;">Thank you for uploading the order details!</h5>
-        <h5 style="font-size:120%;">Please click the "Next" button to continue.</h5>
-        <div>
-            <form action="/get_order" method="post">
+        <h1>DoughNation App</h1>
+        <audio autoplay>
+            <source src="/play_local_wav" type="audio/wav">
+        </audio>
+        <p style="font-size:120%;">We noticed you asked for a <strong>{{pizzaSize}} pizza</strong> with the following topping:</p>
+        <ul>
+            {% for topping in pizzaTopping %}
+                <li>{{topping}}</li>
+            {% endfor %}
+        </ul>
+        <div class="col-md-8" >
+            <form style="display:inline-block;" action="/get_topping" method="POST">
                 <label>
                     <br>
-                    <input class="btn" type="submit" value="Next">
+                    <input class="btn" type="submit" value="Recording Again">
+                </label>
+            </form>
+            <form style="display:inline-block;" action="/get_order" method="POST">
+                <label>
+                    <br>
+                    <input class="btn" type="submit" value="Continue">
                 </label>
             </form>
         </div>

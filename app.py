@@ -1,7 +1,7 @@
 from suoportFunctions import *
 
 app = Flask(__name__)
-raw_address, customer_address, raw_order, pizza_size, pizza_topping, record_audio, play_audio = None, None, None, None, None, None, None
+raw_address, customer_address, raw_order, pizza_size, pizza_topping, play_audio = None, None, None, None, None, None
 
 
 @app.route("/")
@@ -66,8 +66,8 @@ def get_order():
     elif not pizza_topping:
         print("missing pizza topping")
 
-    result = str("Thanks for using the Dough Nation App to place your order. Just wanted to double check that I got it right, ya want a " + 
-                 pizza_size[0] + " pizza with " + " ".join(map(str, pizza_topping)) + ". And the delivery address is " + customer_address + 
+    result = str("Thanks for using the Dough Nation App to place your order. Just wanted to double check that I got it right, ya want a " +
+                 pizza_size[0] + " pizza with " + " ".join(map(str, pizza_topping)) + ". And the delivery address is " + customer_address +
                  ", correct?")
     text_to_speech(result, play_audio)
     return render_template("getOrder.html", customerAddress=customer_address, orderSize=pizza_size[0], orderTopping=pizza_topping)
@@ -98,7 +98,7 @@ def get_info_record_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            raw_address = get_local_audio_text(file, record_audio)
+            raw_address = get_local_audio_text(file, "info_record.wav")
             print(raw_address)
     return render_template("getInfoRedirect.html")
 
@@ -128,7 +128,7 @@ def get_topping_record_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            raw_order = get_local_audio_text(file, record_audio)
+            raw_order = get_local_audio_text(file, "topping_record.wav")
             print(raw_order)
     return redirect("/get_topping_redirect")
 

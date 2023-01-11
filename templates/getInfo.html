@@ -138,7 +138,7 @@
         {
             let blob = new Blob(audioChunks, {type: media.type}),
                 data = new FormData();
-            data.set("info_record_wav", blob, `record${media.ext}`);
+            data.set("info_record_wav", blob, `info_record${media.ext}`);
             fetch("/get_info_record_wav",
             {
                 method: "POST",

@@ -90,7 +90,7 @@ def clean_text(text):
     stop_words = stopwords.words("english")
     stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please",
                        "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy", "day",
-                       "hey", "yoo", "deliver", "delivery", "delivered", "piece", "want", "order"])
+                       "hey", "yoo", "deliver", "delivery", "delivered", "piece", "want", "order", "pizza", "piz", "pizze"])
     clean_texts = " ".join([word.replace("X", "").replace("/", "") for word in text.split() if word.lower() not in stop_words])
     return clean_texts
 

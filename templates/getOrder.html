@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>La Pizza Express</title>
+        <title>La AI Pizza Plaza</title>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet"/>
@@ -23,14 +23,14 @@
                 <div class="container">
                     <div class="row slider-text align-items-center">
                         <div class="col-md-6 col-sm-12 ftco-animate">
-                            <h1><span class="subheading">La Pizza Express</span></h1>
+                            <h1><span class="subheading">La AI Pizza Plaza</span></h1>
                             <h2>Order Summary</h2>
-                            <p class="mb-4 mb-md-5"><strong>Delivery address</strong>: {{customerAddress}}</p>
-                            <p class="mb-4 mb-md-5"><strong>Pizza size</strong>: {{orderSize}}</p>
-                            <p class="mb-4 mb-md-5"><strong>Pizza topping</strong>:</p>
-                            <ul>
+                            <p class="mb-4 mb-md-5">Delivery address: <strong>{{customerAddress}}</strong></p>
+                            <p class="mb-4 mb-md-5">Pizza size: <strong>{{orderSize}}</strong></p>
+                            <p class="mb-4 mb-md-5">Pizza topping:</p>
+                            <ul class="block-27" style="list-style-type:square">
                                 {% for topping in orderTopping %}
-                                    <li>{{topping}}</li>
+                                    <li><strong>{{topping}}</strong></li>
                                 {% endfor %}
                             </ul>
                         </div>

@@ -65,8 +65,8 @@ def text_to_speech(texts, name, language):
 
 
 def get_keywords(text):
-    pizza_size = ["large", "medium", "small"]
-    pizza_topping = ["pepperoni", "bacon", "chicken", "anchovies", "mushroom", "onion", "black olive", "green pepper"]
+    pizza_size = ["Giant", "Large", "Medium"]
+    pizza_topping = ["Pepperoni", "Bacon", "Chicken", "Anchovies", "Mushroom", "Onion", "Black olive", "Green pepper"]
     order_size, order_topping = [], []
     check_size = True
 

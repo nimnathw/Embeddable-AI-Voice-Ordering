@@ -25,12 +25,12 @@
                         <div class="col-md-6 col-sm-12 ftco-animate">
                             <h1><span class="subheading">La AI Pizza Plaza</span></h1>
                             <h2>Order Summary</h2>
-                            <p class="mb-4 mb-md-5">Delivery address: <strong>{{customerAddress}}</strong></p>
-                            <p class="mb-4 mb-md-5">Pizza size: <strong>{{orderSize}}</strong></p>
+                            <p class="mb-4 mb-md-5">Delivery address: <a style="color:yellow;"><strong>{{customerAddress}}</strong></a></p>
+                            <p class="mb-4 mb-md-5">Pizza size: <a style="color:yellow;"><strong>{{orderSize}}</strong></a></p>
                             <p class="mb-4 mb-md-5">Pizza topping:</p>
                             <ul class="block-27" style="list-style-type:square">
                                 {% for topping in orderTopping %}
-                                    <li><strong>{{topping}}</strong></li>
+                                    <li><p style="color:yellow;"><strong>{{topping}}</strong></p></li>
                                 {% endfor %}
                             </ul>
                         </div>

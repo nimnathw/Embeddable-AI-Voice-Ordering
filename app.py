@@ -1,7 +1,7 @@
 from suoportFunctions import *
 
 app = Flask(__name__)
-raw_address, customer_address, raw_order, pizza_size, pizza_topping, play_audio = None, None, None, None, None, None
+language, raw_address, customer_address, raw_order, pizza_size, pizza_topping, play_audio = None, None, None, None, None, None, None
 
 
 @app.route("/")
@@ -11,10 +11,11 @@ def root():
 
 @app.route("/get_info", methods=["POST"])
 def get_info():
-    global play_audio
+    global language, play_audio
+    language = request.form["voice"]
     play_audio = "intro.wav"
     result = "Welcome to Dough Nation, how's it going? Where should we send your delicious pizza order to?"
-    text_to_speech(result, play_audio)
+    text_to_speech(result, play_audio, language)
     return render_template("getInfo.html")
 
 
@@ -25,7 +26,7 @@ def get_info_redirect():
     play_audio = "intro_repeat.wav"
     result = "Just want to confirm, did ya ask for the pizza to be dropped off at " + customer_address + \
              " ? If not, no worries, just give the recording again button a tap."
-    text_to_speech(result, play_audio)
+    text_to_speech(result, play_audio, language)
     return render_template("getInfoRedirect.html", customerAddress=customer_address)
 
 
@@ -36,7 +37,7 @@ def get_topping():
     result = "What size of pizza are you looking for? We got three options: large, medium, and small. " \
              "Also, what kind of toppings do you want on your pizza? We have pepperoni, bacon, chicken, anchovies, " \
              "mushroom, onion, black olives, and green pepper."
-    text_to_speech(result, play_audio)
+    text_to_speech(result, play_audio, language)
     return render_template("getTopping.html")
 
 
@@ -49,7 +50,7 @@ def get_topping_redirect():
     play_audio = "topping_repeat.wav"
     result = "Just wanted to make sure, did ya order a " + pizza_size[0] + " pizza with: " + " ".join(map(str, pizza_topping)) + \
              " on it? If not, no worries, just give the recording again button another press."
-    text_to_speech(result, play_audio)
+    text_to_speech(result, play_audio, language)
     return render_template("getToppingRedirect.html", pizzaSize=pizza_size[0], pizzaTopping=pizza_topping)
 
 
@@ -68,7 +69,7 @@ def get_order():
     result = str("Thanks for using the Dough Nation App to place your order. Just wanted to double check that I got it right, ya want a " +
                  pizza_size[0] + " pizza with " + " ".join(map(str, pizza_topping)) + ". And the delivery address is " + customer_address +
                  ", correct?")
-    text_to_speech(result, play_audio)
+    text_to_speech(result, play_audio, language)
     return render_template("getOrder.html", customerAddress=customer_address, orderSize=pizza_size[0], orderTopping=pizza_topping)
 
 

@@ -14,7 +14,7 @@ def get_info():
     global language, play_audio
     language = request.form["voice"]
     play_audio = "intro.wav"
-    result = "Welcome to Dough Nation, how's it going? Where should we send your delicious pizza order to?"
+    result = "Welcome to La AI Pizza Plaza, how's it going? Where should we send your delicious pizza order to?"
     text_to_speech(result, play_audio, language)
     return render_template("getInfo.html")
 
@@ -34,7 +34,7 @@ def get_info_redirect():
 def get_topping():
     global play_audio
     play_audio = "topping.wav"
-    result = "What size of pizza are you looking for? We got three options: large, medium, and small. " \
+    result = "What size of pizza are you looking for? We got three options: giant, large, and medium. " \
              "Also, what kind of toppings do you want on your pizza? We have pepperoni, bacon, chicken, anchovies, " \
              "mushroom, onion, black olives, and green pepper."
     text_to_speech(result, play_audio, language)
@@ -66,9 +66,9 @@ def get_order():
     elif not pizza_topping:
         print("missing pizza topping")
 
-    result = str("Thanks for using the Dough Nation App to place your order. Just wanted to double check that I got it right, ya want a " +
+    result = str("Thanks for using the La AI Pizza Plaza to place your order. Just wanted to double check that I got it right, ya want a " +
                  pizza_size[0] + " pizza with " + " ".join(map(str, pizza_topping)) + ". And the delivery address is " + customer_address +
-                 ", correct?")
+                 ", is that correct?")
     text_to_speech(result, play_audio, language)
     return render_template("getOrder.html", customerAddress=customer_address, orderSize=pizza_size[0], orderTopping=pizza_topping)
 

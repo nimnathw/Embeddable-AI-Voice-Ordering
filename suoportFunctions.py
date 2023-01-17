@@ -41,7 +41,7 @@ def speech_to_text(file):
     return output
 
 
-def text_to_speech(texts, name):
+def text_to_speech(texts, name, language):
     # remove the existing files in the folder
     bash_command = str("find . -path \*/" + name + " -delete")
     os.system(bash_command)
@@ -51,7 +51,7 @@ def text_to_speech(texts, name):
     # setting up the headers for post request to service
     headers = {"Content-Type": "application/json", "Accept": "audio/wav"}
     # setting up params
-    params = {"output": "output_text.wav", "rate_percentage": -3, "pitch_percentagequery": 0}
+    params = {"output": "output_text.wav", "rate_percentage": -3, "pitch_percentagequery": 0, "voice":language}
     # creating a data in JSON format to send as a parameter to the service
     words = json.dumps({"text": texts})
     # method to get the Voice data from the text service
@@ -91,8 +91,8 @@ def clean_text(text):
     stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please",
                        "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy", "day",
                        "hey", "yoo", "deliver", "delivery", "delivered", "piece", "want", "order"])
-    clean_text = " ".join([word.replace("X", "").replace("/", "") for word in text.split() if word.lower() not in stop_words])
-    return clean_text
+    clean_texts = " ".join([word.replace("X", "").replace("/", "") for word in text.split() if word.lower() not in stop_words])
+    return clean_texts
 
 
 def get_local_audio_text(file, file_name):

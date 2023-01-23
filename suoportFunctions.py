@@ -1,13 +1,12 @@
 import os
-import uuid
 import glob
 import json
 import requests
-import yake
 import pandas as pd
 from zipfile import ZipFile
 from flask import Flask, render_template, request, flash, redirect, Response, url_for
 from difflib import SequenceMatcher
+import yake
 from nltk.corpus import stopwords
 import nltk
 nltk.download("stopwords")
@@ -25,7 +24,7 @@ def read_zip_file(zip_name):
 
 def speech_to_text(file):
     # speech url, here port defines on basis of kubernetes port forward
-    speech_to_text_url = "http://localhost:1081/speech-to-text/api/v1/recognize?"
+    speech_to_text_url = "https://sn-watson-stt.labs.skills.network/speech-to-text/api/v1/recognize"
     # setting up params models
     params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.6"}
     headers = {"Content-Type": "audio/wav"}
@@ -47,7 +46,7 @@ def text_to_speech(texts, name, language):
     os.system(bash_command)
 
     # speech url, here port defines on blsasis of kubernetes port forword
-    text_to_speech_url = "http://localhost:1080/text-to-speech/api/v1/synthesize"
+    text_to_speech_url = "https://sn-watson-tts.labs.skills.network/text-to-speech/api/v1/synthesize"
     # setting up the headers for post request to service
     headers = {"Content-Type": "application/json", "Accept": "audio/wav"}
     # setting up params

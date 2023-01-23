@@ -9,7 +9,6 @@ from difflib import SequenceMatcher
 import yake
 from nltk.corpus import stopwords
 import nltk
-nltk.download("stopwords")
 
 
 def read_zip_file(zip_name):
@@ -86,6 +85,7 @@ def get_keywords(text):
 
 
 def clean_text(text):
+    nltk.download("stopwords")
     stop_words = stopwords.words("english")
     stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please",
                        "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy", "day",

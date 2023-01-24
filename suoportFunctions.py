@@ -11,23 +11,15 @@ from nltk.corpus import stopwords
 import nltk
 
 
-def read_zip_file(zip_name):
-    files = str(os.getcwd() + "/" + zip_name + ".zip")
-    with ZipFile(files, "r") as zip_object:
-        zip_object.extractall()
-
-    path = str(os.getcwd() + "/" + zip_name + "/*.wav")
-    folder = glob.glob(path)
-    return sorted(folder, reverse=False)
-
-
 def speech_to_text(file):
-    # speech url, here port defines on basis of kubernetes port forward
+    # speech url
     speech_to_text_url = "https://sn-watson-stt.labs.skills.network/speech-to-text/api/v1/recognize"
-    # setting up params models
-    params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.6"}
+    # set up the headers for audio format
     headers = {"Content-Type": "audio/wav"}
-    result = requests.post(speech_to_text_url, headers=headers, params=params, data=file)  # data=open(file, "rb")
+    # set up parameters
+    params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.6"}
+    # method to get the Voice data from the text service
+    result = requests.post(speech_to_text_url, headers=headers, params=params, data=file)
 
     # get transcript from json result
     output = ""
@@ -44,13 +36,13 @@ def text_to_speech(texts, name, language):
     bash_command = str("find . -path \*/" + name + " -delete")
     os.system(bash_command)
 
-    # speech url, here port defines on blsasis of kubernetes port forword
+    # text url
     text_to_speech_url = "https://sn-watson-tts.labs.skills.network/text-to-speech/api/v1/synthesize"
-    # setting up the headers for post request to service
+    # set up the headers for post request to service
     headers = {"Content-Type": "application/json", "Accept": "audio/wav"}
-    # setting up params
+    # set up parameters
     params = {"output": "output_text.wav", "rate_percentage": -3, "pitch_percentagequery": 0, "voice":language}
-    # creating a data in JSON format to send as a parameter to the service
+    # create a data in JSON format to send as a parameter to the service
     words = json.dumps({"text": texts})
     # method to get the Voice data from the text service
     request = requests.post(text_to_speech_url, headers=headers, params=params, data=words)
@@ -60,6 +52,16 @@ def text_to_speech(texts, name, language):
         print("Creating file ---", name)
     with open(name, mode="bx") as f:
         f.write(request.content)
+
+
+def clean_text(text):
+    nltk.download("stopwords")
+    stop_words = stopwords.words("english")
+    stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please",
+                       "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy", "day",
+                       "hey", "yoo", "deliver", "delivery", "delivered", "piece", "want", "order", "pizza", "piz", "pizze"])
+    clean_texts = " ".join([word.replace("X", "").replace("/", "") for word in text.split() if word.lower() not in stop_words])
+    return clean_texts
 
 
 def get_keywords(text):
@@ -84,16 +86,6 @@ def get_keywords(text):
     return order_size, order_topping
 
 
-def clean_text(text):
-    nltk.download("stopwords")
-    stop_words = stopwords.words("english")
-    stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please",
-                       "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy", "day",
-                       "hey", "yoo", "deliver", "delivery", "delivered", "piece", "want", "order", "pizza", "piz", "pizze"])
-    clean_texts = " ".join([word.replace("X", "").replace("/", "") for word in text.split() if word.lower() not in stop_words])
-    return clean_texts
-
-
 def get_local_audio_text(file, file_name):
     with open(file_name, "wb") as audio:
         file.save(audio)
@@ -109,3 +101,13 @@ def get_local_wav_file(file_name):
         while data:
             yield data
             data = wav.read(1024)
+
+
+def read_zip_file(zip_name):
+    files = str(os.getcwd() + "/" + zip_name + ".zip")
+    with ZipFile(files, "r") as zip_object:
+        zip_object.extractall()
+
+    path = str(os.getcwd() + "/" + zip_name + "/*.wav")
+    folder = glob.glob(path)
+    return sorted(folder, reverse=False)

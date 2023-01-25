@@ -6,52 +6,9 @@ import pandas as pd
 from zipfile import ZipFile
 from flask import Flask, render_template, request, flash, redirect, Response, url_for
 from difflib import SequenceMatcher
-import yake
 from nltk.corpus import stopwords
 import nltk
-
-
-def speech_to_text(file):
-    # speech url
-    speech_to_text_url = "https://sn-watson-stt.labs.skills.network/speech-to-text/api/v1/recognize"
-    # set up the headers for audio format
-    headers = {"Content-Type": "audio/wav"}
-    # set up parameters
-    params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.6"}
-    # method to get the Voice data from the text service
-    result = requests.post(speech_to_text_url, headers=headers, params=params, data=file)
-
-    # get transcript from json result
-    output = ""
-    json_obj = json.loads(result.text)
-    results_data = json_obj["results"]
-    for r in results_data:
-        for transcript in r["alternatives"]:
-            output = output + " " + transcript["transcript"]
-    return output
-
-
-def text_to_speech(texts, name, language):
-    # remove the existing files in the folder
-    bash_command = str("find . -path \*/" + name + " -delete")
-    os.system(bash_command)
-
-    # text url
-    text_to_speech_url = "https://sn-watson-tts.labs.skills.network/text-to-speech/api/v1/synthesize"
-    # set up the headers for post request to service
-    headers = {"Content-Type": "application/json", "Accept": "audio/wav"}
-    # set up parameters
-    params = {"output": "output_text.wav", "rate_percentage": -3, "pitch_percentagequery": 0, "voice":language}
-    # create a data in JSON format to send as a parameter to the service
-    words = json.dumps({"text": texts})
-    # method to get the Voice data from the text service
-    request = requests.post(text_to_speech_url, headers=headers, params=params, data=words)
-    print(request.status_code)
-    if request.status_code != 200:
-        print("TTS Service status:", request.text)
-        print("Creating file ---", name)
-    with open(name, mode="bx") as f:
-        f.write(request.content)
+# import yake
 
 
 def clean_text(text):
@@ -111,3 +68,46 @@ def read_zip_file(zip_name):
     path = str(os.getcwd() + "/" + zip_name + "/*.wav")
     folder = glob.glob(path)
     return sorted(folder, reverse=False)
+
+
+def speech_to_text(file):
+    # speech url
+    speech_to_text_url = "https://sn-watson-stt.labs.skills.network/speech-to-text/api/v1/recognize"
+    # set up the headers for audio format
+    headers = {"Content-Type": "audio/wav"}
+    # set up parameters
+    params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.6"}
+    # method to get the Voice data from the text service
+    result = requests.post(speech_to_text_url, headers=headers, params=params, data=file)
+
+    # get transcript from json result
+    output = ""
+    json_obj = json.loads(result.text)
+    results_data = json_obj["results"]
+    for r in results_data:
+        for transcript in r["alternatives"]:
+            output = output + " " + transcript["transcript"]
+    return output
+
+
+def text_to_speech(texts, name, language):
+    # remove the existing files in the folder
+    bash_command = str("find . -path \*/" + name + " -delete")
+    os.system(bash_command)
+
+    # text url
+    text_to_speech_url = "https://sn-watson-tts.labs.skills.network/text-to-speech/api/v1/synthesize"
+    # set up the headers for post request to service
+    headers = {"Content-Type": "application/json", "Accept": "audio/wav"}
+    # set up parameters
+    params = {"output": "output_text.wav", "rate_percentage": -3, "pitch_percentagequery": 0, "voice":language}
+    # create a data in JSON format to send as a parameter to the service
+    words = json.dumps({"text": texts})
+    # method to get the Voice data from the text service
+    request = requests.post(text_to_speech_url, headers=headers, params=params, data=words)
+    print(request.status_code)
+    if request.status_code != 200:
+        print("TTS Service status:", request.text)
+        print("Creating file ---", name)
+    with open(name, mode="bx") as f:
+        f.write(request.content)

@@ -8263,7 +8263,11 @@ textarea.form-control {
     float: left;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 50%;
-    position: relative; }
+    position: relative; 
+    font-size: 26px;
+    text-align: center; 
+    padding-top:9px;
+    color: white; }
     .ftco-footer-social li a span {
       position: absolute;
       font-size: 26px;

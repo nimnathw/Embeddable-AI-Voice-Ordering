@@ -5,6 +5,4 @@ Jinja2
 scipy
 pandas
 pyjnius
-tensorflow
-yake
 nltk

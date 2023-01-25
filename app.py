@@ -25,7 +25,7 @@ def get_info_redirect():
     customer_address = clean_text(raw_address)  # clean the stop words from audio files
     play_audio = "intro_repeat.wav"
     result = "Just want to confirm, did ya ask for the pizza to be dropped off at " + customer_address + \
-             " ? If not, no worries, just give the recording again button a tap."
+             "? If not, no worries, just give the recording again button a tap."
     text_to_speech(result, play_audio, language)
     return render_template("getInfoRedirect.html", customerAddress=customer_address)
 

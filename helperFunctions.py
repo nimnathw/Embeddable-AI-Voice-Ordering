@@ -10,12 +10,13 @@ from nltk.corpus import stopwords
 import nltk
 # import yake
 
+try:
+    nltk.data.find("corpora/stopwords")
+except LookupError:
+    nltk.download("stopwords")
+
 
 def clean_text(text):
-    try:
-        nltk.data.find("corpora/stopwords")
-    except LookupError:
-        nltk.download("stopwords")
     stop_words = stopwords.words("english")
     stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please",
                        "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy", "day",

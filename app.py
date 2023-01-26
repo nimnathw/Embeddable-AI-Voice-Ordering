@@ -12,7 +12,8 @@ def root():
 @app.route("/get_info", methods=["POST"])
 def get_info():
     global language, play_audio
-    language = request.form["voice"]
+    if not language:
+        language = request.form["voice"]
     play_audio = "intro.wav"
     result = "Welcome to La AI Pizza Plaza, how's it going? Where should we send your delicious pizza order to?"
     text_to_speech(result, play_audio, language)

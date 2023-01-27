@@ -95,6 +95,10 @@ def speech_to_text(file):
 
 
 def text_to_speech(texts, name, language):
+    # remove the existing files in the folder
+    bash_command = str("find . -path \*/" + name + " -delete")
+    os.system(bash_command)
+    
     # text url
     text_to_speech_url = "https://sn-watson-tts.labs.skills.network/text-to-speech/api/v1/synthesize?output=output_text.wav"
     # set up the headers for post request to service

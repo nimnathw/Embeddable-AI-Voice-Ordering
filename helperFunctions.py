@@ -17,7 +17,7 @@ except LookupError:
 
 def clean_text(text):
     stop_words = stopwords.words("english")
-    stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please", "the", "and"
+    stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please", "the", "and",
                        "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy", "day", "can", "could",
                        "my", "mine", "I" "hey", "yoo", "deliver", "delivery", "delivered", "piece", "want",
                        "send", "sent", "order", "pizza", "piz", "pizze", "address", "addrez", "to", "too"])

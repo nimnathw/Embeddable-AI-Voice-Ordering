@@ -11,7 +11,7 @@ def root():
     language, raw_address, customer_address, raw_order, pizza_size, pizza_topping, play_audio = None, None, None, None, None, None, None
 
     # remove the existing files in the folder
-    file = ["intro.wav", "info_record.wav", "intro_repeat.wav", "topping.wav", "topping_record.wav", "topping_repeat.wav"]
+    file = ["info.wav", "info_record.wav", "info_repeat.wav", "topping.wav", "topping_record.wav", "topping_repeat.wav"]
     for i in file:
         bash_command = str("find . -path \*/" + i + " -delete")
         os.system(bash_command)
@@ -23,7 +23,7 @@ def get_info():
     global language, play_audio
     if not language:
         language = request.form["voice"]
-    play_audio = "intro.wav"
+    play_audio = "info.wav"
     result = "Welcome to La AI Pizza Plaza, how's it going? Where should we send your delicious pizza order to?"
     text_to_speech(result, play_audio, language)
     return render_template("getInfo.html")
@@ -33,7 +33,7 @@ def get_info():
 def get_info_redirect():
     global customer_address, play_audio
     customer_address = clean_text(raw_address)  # clean the stop words from audio files
-    play_audio = "intro_repeat.wav"
+    play_audio = "info_repeat.wav"
     result = "Just want to confirm, did ya ask for the pizza to be dropped off at " + customer_address + \
              "? If not, no worries, just give the recording again button a tap."
     text_to_speech(result, play_audio, language)

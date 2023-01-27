@@ -100,11 +100,11 @@ def text_to_speech(texts, name, language):
     os.system(bash_command)
 
     # text url
-    text_to_speech_url = "https://sn-watson-tts.labs.skills.network/text-to-speech/api/v1/synthesize"
+    text_to_speech_url = "https://sn-watson-tts.labs.skills.network/text-to-speech/api/v1/synthesize?output=output_text.wav"
     # set up the headers for post request to service
     headers = {"Content-Type": "application/json", "Accept": "audio/wav"}
     # set up parameters
-    params = {"output": "output_text.wav", "rate_percentage": -3, "pitch_percentagequery": 0, "voice":language}
+    params = {"rate_percentage": -3, "pitch_percentagequery": 0, "voice":language}
     # create a data in JSON format to send as a parameter to the service
     words = json.dumps({"text": texts})
     # method to get the Voice data from the text service

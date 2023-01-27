@@ -10,7 +10,7 @@ def root():
     global language, raw_address, customer_address, raw_order, pizza_size, pizza_topping, play_audio
     language, raw_address, customer_address, raw_order, pizza_size, pizza_topping, play_audio = None, None, None, None, None, None, None
 
-    # clean the folder
+    # remove the existing files in the folder
     file = ["intro.wav", "info_record.wav", "intro_repeat.wav", "topping.wav", "topping_record.wav", "topping_repeat.wav"]
     for i in file:
         bash_command = str("find . -path \*/" + i + " -delete")

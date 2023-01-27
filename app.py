@@ -143,15 +143,6 @@ def get_topping_record_wav():
     return redirect("/get_topping_redirect")
 
 
-"""
-@app.route("/audio_name", methods=["POST"])
-def audio_name():
-    global audioName
-    audioName = request.form["audioName"]
-    return render_template("getOrder.html")
-"""
-
-
 @app.route("/play_local_wav")
 def play_local_wav():
     return Response(get_local_wav_file(play_audio), mimetype="audio/x-wav")

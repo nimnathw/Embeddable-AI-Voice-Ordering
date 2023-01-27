@@ -44,9 +44,8 @@ def get_info_redirect():
 def get_topping():
     global play_audio
     play_audio = "topping.wav"
-    result = "What size of pizza are you looking for? We got three options: giant, large, and medium. " \
-             "Also, what kind of toppings do you want on your pizza? We have pepperoni, bacon, chicken, anchovies, " \
-             "mushroom, onion, black olives, and green pepper."
+    result = "At La AI Pizza Plaza, we offer a mouth-watering selection of giant, large, and medium pizzas, piled high with 8 delectable toppings to choose from. " \
+             "See the options in the picture below and indulge in the perfect pizza for you!"
     text_to_speech(result, play_audio, language)
     return render_template("getTopping.html")
 

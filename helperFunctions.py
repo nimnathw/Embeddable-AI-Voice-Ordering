@@ -4,7 +4,6 @@ import json
 import requests
 import pandas as pd
 from zipfile import ZipFile
-from flask import Flask, render_template, request, flash, redirect, Response, url_for
 from difflib import SequenceMatcher
 from nltk.corpus import stopwords
 import nltk
@@ -18,7 +17,7 @@ except LookupError:
 
 def clean_text(text):
     stop_words = stopwords.words("english")
-    stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please", "the",
+    stop_words.extend(["gimme", "lemme", "cause", "cuz", "imma", "gonna", "wanna", "please", "the", "and"
                        "gotta", "hafta", "woulda", "coulda", "shoulda", "howdy", "day", "can", "could",
                        "my", "mine", "I" "hey", "yoo", "deliver", "delivery", "delivered", "piece", "want",
                        "send", "sent", "order", "pizza", "piz", "pizze", "address", "addrez", "to", "too"])
@@ -96,10 +95,6 @@ def speech_to_text(file):
 
 
 def text_to_speech(texts, name, language):
-    # remove the existing files in the folder
-    bash_command = str("find . -path \*/" + name + " -delete")
-    os.system(bash_command)
-
     # text url
     text_to_speech_url = "https://sn-watson-tts.labs.skills.network/text-to-speech/api/v1/synthesize?output=output_text.wav"
     # set up the headers for post request to service

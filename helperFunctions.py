@@ -47,15 +47,6 @@ def get_keywords(text):
     return order_size, order_topping
 
 
-def get_local_audio_text(file, file_name):
-    with open(file_name, "wb") as audio:
-        file.save(audio)
-        print("file uploaded successfully")
-    with open(file_name, "rb") as audio:
-        text = speech_to_text(audio)
-    return text
-
-
 def play_local_wav_file(file_name):
     with open(str("./" + file_name), "rb") as wav:
         data = wav.read(1024)
@@ -74,7 +65,13 @@ def read_zip_file(zip_name):
     return sorted(folder, reverse=False)
 
 
-def speech_to_text(file):
+def save_audio(file, file_name):
+    with open(file_name, "wb") as audio:
+        file.save(audio)
+        print("file uploaded successfully")
+
+        
+def speech_to_text(file_name):
     # speech url
     speech_to_text_url = "https://sn-watson-stt.labs.skills.network/speech-to-text/api/v1/recognize"
     # set up the headers for audio format
@@ -82,7 +79,7 @@ def speech_to_text(file):
     # set up parameters
     params = {"model": "en-US_Multimedia", "smart_formatting": "true", "background_audio_suppression": "0.6"}
     # method to get the Voice data from the text service
-    result = requests.post(speech_to_text_url, headers=headers, params=params, data=file)
+    result = requests.post(speech_to_text_url, headers=headers, params=params, data=open(file_name, 'rb'))
 
     # get transcript from json result
     output = ""

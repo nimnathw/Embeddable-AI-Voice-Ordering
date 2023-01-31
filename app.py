@@ -144,7 +144,7 @@ def get_topping_record_wav():
 
 @app.route("/play_local_wav")
 def play_local_wav():
-    return Response(get_local_wav_file(play_audio), mimetype="audio/x-wav")
+    return Response(play_local_wav_file(play_audio), mimetype="audio/x-wav")
 
 
 if __name__ == "__main__":

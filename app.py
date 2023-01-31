@@ -77,7 +77,7 @@ def get_order():
 
     result = str("Thanks for using the La AI Pizza Plaza to place your order. Just wanted to double check that I got it right, ya want a " +
                  pizza_size[0] + " pizza with " + " ".join(map(str, pizza_topping)) + ". And the delivery address is " + customer_address +
-                 ", is that correct")
+                 ", is that correct?")
     text_to_speech(result, play_audio, language)
     return render_template("getOrder.html", customerAddress=customer_address, orderSize=pizza_size[0], orderTopping=pizza_topping)
 

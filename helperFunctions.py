@@ -56,7 +56,7 @@ def get_local_audio_text(file, file_name):
     return text
 
 
-def get_local_wav_file(file_name):
+def play_local_wav_file(file_name):
     with open(str("./" + file_name), "rb") as wav:
         data = wav.read(1024)
         while data:

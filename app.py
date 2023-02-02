@@ -107,7 +107,8 @@ def get_info_record_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            raw_address = get_local_audio_text(file, "info_record.wav")
+            save_audio(file, "info_record.wav")
+            raw_address = speech_to_text("info_record.wav")
             print(raw_address)
     return render_template("getInfoRedirect.html")
 
@@ -137,7 +138,8 @@ def get_topping_record_wav():
         if file.filename == "":
             return "No audio file selected"
         else:
-            raw_order = get_local_audio_text(file, "topping_record.wav")
+            save_audio(file, "topping_record.wav")
+            raw_order = speech_to_text("topping_record.wav")
             print(raw_order)
     return redirect("/get_topping_redirect")
 
